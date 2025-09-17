@@ -1,5 +1,19 @@
 import { createTheme } from '@mui/material/styles';
 
+// Extend MUI theme interface to include custom properties
+declare module '@mui/material/styles' {
+  interface Palette {
+    gradients: {
+      posterOverlay: string;
+    };
+  }
+  interface PaletteOptions {
+    gradients?: {
+      posterOverlay: string;
+    };
+  }
+}
+
 // Light Mode Palette
 const lightPalette = {
   mode: 'light' as 'light',
@@ -16,6 +30,10 @@ const lightPalette = {
   background: {
     default: '#F7FAFC',
     paper: '#FFFFFF',
+  },
+  surface: {
+    default: '#FFFFFF',
+    hover: 'rgba(255,255,255,0.8)',
   },
   text: {
     primary: '#2D3748',
@@ -43,6 +61,10 @@ const darkPalette = {
   background: {
     default: '#1A202C',
     paper: '#2D3748',
+  },
+  surface: {
+    default: '#2D3748',
+    hover: 'rgba(45,55,72,0.9)',
   },
   text: {
     primary: '#E2E8F0',
@@ -136,15 +158,21 @@ const components = {
 };
 
 export const lightTheme = createTheme({
-  palette: lightPalette,
+  palette: {
+    ...lightPalette,
+    gradients,
+  },
   typography,
   components,
-  // Add gradients and other extensions
+  spacing: 8, // 8px base unit
 });
 
 export const darkTheme = createTheme({
-  palette: darkPalette,
+  palette: {
+    ...darkPalette,
+    gradients,
+  },
   typography,
   components,
-  // Add gradients and other extensions
+  spacing: 8, // 8px base unit
 });

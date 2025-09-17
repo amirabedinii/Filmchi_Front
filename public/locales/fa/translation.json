@@ -8,7 +8,21 @@
   "profile": "پروفایل",
   "logout": "خروج",
   "movies": "فیلم‌ها",
-  "lists": "لیست‌ها"
+  "lists": "لیست‌ها",
+  "watchlist": "لیست تماشا",
+  "favorites": "علاقه‌مندی‌ها",
+  "bookmarks": "نشان‌شده‌ها",
+  "playlists": "پلی‌لیست‌ها",
+  "search": "جستجو",
+  "searchMovies": "جستجوی فیلم",
+  "addToList": "افزودن به لیست",
+  "removeFromList": "حذف از لیست",
+  "loadMore": "بارگذاری بیشتر",
+  "noResults": "نتیجه‌ای یافت نشد",
+  "tryAgain": "تلاش مجدد",
+  "loading": "در حال بارگذاری...",
+  "error": "خطا",
+  "success": "موفق"
 }
 
 

@@ -8,7 +8,21 @@
   "profile": "Profile",
   "logout": "Logout",
   "movies": "Movies",
-  "lists": "Lists"
+  "lists": "Lists",
+  "watchlist": "Watchlist",
+  "favorites": "Favorites",
+  "bookmarks": "Bookmarks",
+  "playlists": "Playlists",
+  "search": "Search",
+  "searchMovies": "Search Movies",
+  "addToList": "Add to List",
+  "removeFromList": "Remove from List",
+  "loadMore": "Load More",
+  "noResults": "No Results Found",
+  "tryAgain": "Try Again",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success"
 }
 
 
