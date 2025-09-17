@@ -12,6 +12,7 @@ export const DashboardLayout = () => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -22,6 +23,7 @@ export const DashboardLayout = () => {
   };
 
   const isRtl = theme.direction === 'rtl';
+  const toggleDrawer = () => setIsDrawerOpen((prev) => !prev);
 
   return (
     <Box sx={{ display: 'flex' }} dir={isRtl ? 'rtl' : 'ltr'}>
@@ -33,7 +35,7 @@ export const DashboardLayout = () => {
         }}
       >
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleDrawer}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -62,7 +64,9 @@ export const DashboardLayout = () => {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant="temporary"
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -71,7 +75,6 @@ export const DashboardLayout = () => {
             boxSizing: 'border-box',
           },
         }}
-        // anchor={isRtl ? 'right' : 'left'}
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
