@@ -2,7 +2,7 @@ import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, AppBar, 
 import { Movie, CheckCircle, Menu as MenuIcon, Brightness4, Brightness7 } from '@mui/icons-material';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '../theme/ThemeProvider.tsx';
 import { useTheme } from '@mui/material/styles';
 
@@ -21,9 +21,17 @@ export const DashboardLayout = () => {
     setAnchorEl(null);
   };
 
+  const isRtl = theme.direction === 'rtl';
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <Box sx={{ display: 'flex' }} dir={isRtl ? 'rtl' : 'ltr'}>
+      <AppBar
+        position="fixed"
+        sx={{
+          width: `calc(100%)`,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
@@ -58,8 +66,12 @@ export const DashboardLayout = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
         }}
+        // anchor={isRtl ? 'right' : 'left'}
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>

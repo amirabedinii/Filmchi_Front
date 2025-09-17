@@ -1,0 +1,14 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "authSuccess": "Logged in successfully",
+  "authError": "Authentication failed",
+  "profile": "Profile",
+  "logout": "Logout",
+  "movies": "Movies",
+  "lists": "Lists"
+}
+
+

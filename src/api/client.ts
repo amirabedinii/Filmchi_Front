@@ -2,10 +2,15 @@ import { QueryClient } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient();
 
-// Example auth functions
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+
+const buildUrl = (path: string) => {
+  if (!API_BASE_URL) return path; // assume dev proxy or same-origin relative
+  return `${API_BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+};
+
 export const login = async (email: string, password: string) => {
-  
-  const response = await fetch('http://localhost:3001/auth/login', {
+  const response = await fetch(buildUrl('/auth/login'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -15,7 +20,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (email: string, password: string) => {
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch(buildUrl('/auth/register'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
