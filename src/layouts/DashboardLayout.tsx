@@ -1,7 +1,7 @@
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, AppBar, Toolbar, IconButton, Typography, Avatar, Menu, MenuItem, Select } from '@mui/material';
 import { Movie, CheckCircle, Menu as MenuIcon, Brightness4, Brightness7 } from '@mui/icons-material';
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '../theme/ThemeProvider.tsx';
 import { useTheme } from '@mui/material/styles';
@@ -13,6 +13,7 @@ export const DashboardLayout = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -79,11 +80,11 @@ export const DashboardLayout = () => {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItemButton>
+            <ListItemButton onClick={() => { navigate('/'); setIsDrawerOpen(false); }}>
               <ListItemIcon><Movie /></ListItemIcon>
               <ListItemText primary={t('movies')} />
             </ListItemButton>
-            <ListItemButton>
+            <ListItemButton onClick={() => { navigate('/lists/favorites'); setIsDrawerOpen(false); }}>
               <ListItemIcon><CheckCircle /></ListItemIcon>
               <ListItemText primary={t('lists')} />
             </ListItemButton>

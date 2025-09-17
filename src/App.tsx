@@ -7,6 +7,8 @@ import { AuthPage } from './pages/AuthPage.tsx';
 import { DashboardLayout } from './layouts/DashboardLayout.tsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.tsx';
 import { queryClient } from './api/client.ts';
+import { ListPage } from './pages/ListPage.tsx';
+import { SearchPage } from './pages/SearchPage.tsx';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
                 <Route element={<DashboardLayout />}>
                   {/* Dashboard routes */}
                   <Route path="/" element={<div>Dashboard</div>} />
+                  <Route path="/lists/:listName" element={<ListPage />} />
+                  <Route path="/search" element={<SearchPage />} />
                 </Route>
               </Route>
             </Routes>

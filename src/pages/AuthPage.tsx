@@ -42,7 +42,7 @@ export const AuthPage = () => {
       } else {
         response = await register(data.email, data.password);
       }
-      useAuth.getState().login(response.token);
+      useAuth.getState().login(response.accessToken, response.refreshToken);
       toast.success(t('authSuccess'));
       navigate('/');
     } catch (error) {
