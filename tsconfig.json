@@ -12,8 +12,9 @@
     "jsx": "react-jsx",
     "strict": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
     "paths": {
+      "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
       "@/pages/*": ["./src/pages/*"],
       "@/stores/*": ["./src/stores/*"],

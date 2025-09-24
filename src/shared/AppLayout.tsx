@@ -7,6 +7,8 @@ export default function AppLayout() {
   const { t, i18n } = useTranslation();
   const language = useUiStore((s) => s.language);
   const setLanguage = useUiStore((s) => s.setLanguage);
+  const theme = useUiStore((s) => s.theme);
+  const setTheme = useUiStore((s) => s.setTheme);
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -16,12 +18,28 @@ export default function AppLayout() {
   return (
     <div className="min-h-full flex flex-col">
       <header className="border-b">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <Link to="/" className="font-semibold">{t('app.title')}</Link>
-          <nav className="flex items-center gap-4">
+          <div className="flex-1 max-w-md">
+            <input
+              aria-label={t('app.search_placeholder')}
+              className="w-full border rounded px-3 py-1.5 text-sm"
+              placeholder={t('app.search_placeholder')}
+            />
+          </div>
+          <nav className="flex items-center gap-2 sm:gap-4">
             <NavLink to="/" className={({ isActive }) => isActive ? 'font-medium' : ''}>{t('app.home')}</NavLink>
             <NavLink to="/login" className={({ isActive }) => isActive ? 'font-medium' : ''}>{t('app.login')}</NavLink>
             <NavLink to="/register" className={({ isActive }) => isActive ? 'font-medium' : ''}>{t('app.register')}</NavLink>
+            <select
+              aria-label={t('app.theme')}
+              className="border rounded px-2 py-1"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
+            >
+              <option value="light">{t('app.light')}</option>
+              <option value="dark">{t('app.dark')}</option>
+            </select>
             <select
               aria-label={t('app.language')}
               className="border rounded px-2 py-1"
