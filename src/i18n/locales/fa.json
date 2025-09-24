@@ -1,0 +1,14 @@
+{
+  "app": {
+    "title": "فیلِمچی",
+    "search_placeholder": "جست‌وجوی فیلم...",
+    "language": "زبان",
+    "english": "انگلیسی",
+    "persian": "فارسی",
+    "login": "ورود",
+    "register": "ثبت‌نام",
+    "home": "خانه"
+  }
+}
+
+

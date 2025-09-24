@@ -1,0 +1,597 @@
+{
+  "info": {
+    "name": "Filmchi API",
+    "_postman_id": "c3f9fb6e-1e7a-4c9d-bb6c-7e2a7c5c0f21",
+    "description": "Postman collection for Filmchi backend endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "listName", "value": "watchlist" },
+    { "key": "tmdbId", "value": "603" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Ensure Authorization header uses latest accessToken",
+          "const token = pm.collectionVariables.get('accessToken');",
+          "if (token) {",
+          "  pm.request.headers.upsert({ key: 'Authorization', value: 'Bearer ' + token });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Healthcheck",
+      "item": [
+        {
+          "name": "GET /",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "GET /movies/search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?q=Matrix&page=1&year=1999&with_genres=28&sort_by=popularity.desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "search"],
+              "query": [
+                {"key": "q", "value": "Matrix"},
+                {"key": "page", "value": "1"},
+                {"key": "year", "value": "1999"},
+                {"key": "with_genres", "value": "28"},
+                {"key": "sort_by", "value": "popularity.desc"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/:tmdbId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/trending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/trending?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "trending"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/popular",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/popular?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "popular"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/top-rated",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/top-rated?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "top-rated"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/now-playing",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/now-playing?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "now-playing"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/upcoming",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/upcoming?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "upcoming"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/:tmdbId/similar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}/similar?page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}", "similar"],
+              "query": [
+                {"key": "page", "value": "1"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /movies/:tmdbId/bookmark (Protected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Matrix\",\n  \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n  \"releaseDate\": \"1999-03-30\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}/bookmark",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}", "bookmark"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /movies/:tmdbId/unbookmark (Protected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}/unbookmark",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}", "unbookmark"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/bookmarks (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/bookmarks?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "bookmarks"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /movies/:tmdbId/bookmark-status (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}/bookmark-status",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}", "bookmark-status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /movies/:tmdbId/rating (Protected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movies/{{tmdbId}}/rating",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "{{tmdbId}}", "rating"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login returns 200', function () { pm.response.to.have.status(200); });",
+                  "let json = {}; try { json = pm.response.json(); } catch (e) {}",
+                  "if (json.accessToken) pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "if (json.refreshToken) pm.collectionVariables.set('refreshToken', json.refreshToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST /auth/refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Refresh returns 200', function () { pm.response.to.have.status(200); });",
+                  "let json = {}; try { json = pm.response.json(); } catch (e) {}",
+                  "if (json.accessToken) pm.collectionVariables.set('accessToken', json.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lists (Protected)",
+      "item": [
+        {
+          "name": "GET /lists/:listName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listName}}?page=1&limit=50&sort=addedAt:desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listName}}"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "50"},
+                {"key": "sort", "value": "addedAt:desc"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /lists/:listName",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tmdbId\": {{tmdbId}},\n  \"title\": \"The Matrix\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listName}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listName}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /lists/:listName/:tmdbId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listName}}/{{tmdbId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listName}}", "{{tmdbId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Recommendations (Protected)",
+      "item": [
+        {
+          "name": "POST /recommendations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"sci-fi movies with time travel\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users (Protected)",
+      "item": [
+        {
+          "name": "GET /users/profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /users/profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"Filmchi User\",\n  \"bio\": \"Movie enthusiast\",\n  \"location\": \"New York\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\",\n  \"favoriteGenres\": [\"Action\", \"Sci-Fi\"],\n  \"favoriteDirectors\": [\"Christopher Nolan\"],\n  \"favoriteActors\": [\"Leonardo DiCaprio\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /users/preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preferences\": {\n    \"theme\": \"dark\",\n    \"language\": \"en\",\n    \"notifications\": {\n      \"email\": true,\n      \"push\": false\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "preferences"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /users/privacy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"privacy\": {\n    \"profileVisible\": true,\n    \"activityVisible\": false,\n    \"listsVisible\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/privacy",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "privacy"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /users/activity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/activity",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "activity"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/export",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "export"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /users/account",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/account",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "account"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

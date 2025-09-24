@@ -1,0 +1,14 @@
+{
+  "app": {
+    "title": "Filmchi",
+    "search_placeholder": "Search movies...",
+    "language": "Language",
+    "english": "English",
+    "persian": "Persian",
+    "login": "Login",
+    "register": "Register",
+    "home": "Home"
+  }
+}
+
+

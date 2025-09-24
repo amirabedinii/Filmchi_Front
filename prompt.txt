@@ -1,0 +1,99 @@
+You are an expert React developer tasked with building a modern, responsive, bilingual (English and Persian) web application called Filmchi, a movie discovery platform that integrates with the provided Filmchi API (a backend service built on TMDB data). The app allows users to search for movies, view trending/popular/top-rated/now-playing/upcoming movies, get movie details and similar recommendations, bookmark movies, rate them, manage custom lists (e.g., watchlist), get AI-based recommendations, and manage their user profile, preferences, privacy, and stats. The app must handle authentication (register, login, refresh token, logout) securely. Support both English (default) and Persian languages, with right-to-left (RTL) support for Persian using libraries like react-i18next and tailwindcss/plugins for RTL.
+
+**Key Requirements:**
+- Use React (latest version) with Vite for the build tool (no Create React App). No server-side rendering (SSR) or PostCSS needed.
+- Styling: Use Tailwind CSS integrated with shadcn/ui components for a professional, modern UI. Ensure the design is sleek, intuitive, and responsive across mobile, tablet, and desktop (use Tailwind's responsive utilities). Theme should support light/dark mode toggling (store in localStorage or user preferences if API supports). Follow the S-Tier SaaS Dashboard Design Checklist from the provided design-principles-example.md for world-class UI/UX (e.g., clean typography with Inter font, card-based layouts, hover effects, smooth transitions, accessibility per WCAG AA+). Use high-quality placeholders (e.g., skeletons from shadcn/ui) during loading. Movie posters from TMDB paths (prepend https://image.tmdb.org/t/p/w500/).
+- Internationalization (i18n): Use react-i18next for English and Persian support. Store language preference in localStorage and user preferences via API if possible. Handle RTL for Persian (e.g., via dir="rtl" and Tailwind RTL plugin). Translate all UI strings, including buttons, labels, errors, and dynamic content (e.g., movie titles remain in original but UI text translated).
+- State Management: Use React Query (Tanstack Query) for API fetching, caching, and optimistic updates. Use Zustand for global state (e.g., auth tokens, user data, language).
+- Routing: Use React Router v6 for navigation.
+- Authentication: Store access/refresh tokens in localStorage (or HttpOnly cookies if possible, but stick to localStorage for simplicity). Implement token refresh logic on API calls (intercept 401 errors and refresh using /auth/refresh). Protect routes with auth guards.
+- API Integration: Base URL is http://localhost:3001 (configurable via env). Use Axios for HTTP requests with interceptors for auth headers.
+- Error Handling: Graceful errors with toasts (use react-hot-toast), translated for both languages.
+- Performance: Lazy load components/routes where possible. Infinite scrolling for paginated lists (e.g., search results, trending).
+- Accessibility: Follow ARIA best practices in shadcn/ui components, ensure keyboard navigation, color contrast, and alt texts.
+- No external dependencies beyond: react, react-dom, react-router-dom, @tanstack/react-query, zustand, axios, react-hot-toast, tailwindcss, shadcn/ui (initialize with necessary components like Button, Card, Input, etc.), lucide-react for icons, react-i18next, i18next, i18next-browser-languagedetector.
+- Testing: Use Vitest + React Testing Library for unit/integration tests. Additionally, integrate Playwright MCP tools (via available mcp__playwright__* function calls) for end-to-end browser testing to verify and improve UI. For each phase, after implementation, use Playwright to navigate, interact, screenshot, check console errors, test responsiveness (resize browser), accessibility (e.g., keyboard navigation via press_key, focus checks), and iterate on improvements based on the design-review-agent.md methodology (e.g., phases for interaction, responsiveness, visual polish, accessibility). Use tools like mcp__playwright__browser_navigate, mcp__playwright__browser_click, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_resize, mcp__playwright__browser_console_messages, etc. Follow the design principles from design-principles-example.md to ensure consistency, and use the design-review-slash-command.md logic to structure reviews.
+
+Build the app in small, incremental phases. For each phase, generate the code, explain changes, include Vitest tests, then use Playwright MCP to test in browser (e.g., launch browser, navigate to localhost:5173, interact, verify bilingual UI, responsiveness, no console errors), suggest UI improvements based on findings, and iterate if needed. Commit to Git after each phase with descriptive messages. At the end, provide a full README.md with setup instructions, env vars (e.g., VITE_API_BASE_URL), i18n setup, and how to run tests (including Playwright e2e).
+
+**Phases Breakdown:**
+
+1. **Project Setup and Base Structure**
+   - Initialize Vite React project.
+   - Install dependencies: tailwindcss, shadcn/ui (init and add components: Button, Card, Input, Label, Tabs, Dialog, etc.), others listed above, plus react-i18next and related.
+   - Setup Tailwind config with shadcn/ui presets and RTL plugin.
+   - Create folder structure: src/components (ui, layouts), src/pages, src/hooks, src/stores, src/services (API), src/utils, src/i18n (translations.json for en/fa).
+   - Implement basic layout: Navbar (with logo, search bar, auth links, language toggle), Footer, Main content wrapper. Add i18n provider and language switcher.
+   - Setup React Router with routes: / (home), /login, /register, /movies/:id.
+   - Add global state with Zustand for auth (isAuthenticated, user, tokens) and language.
+   - Add Axios instance with baseURL and auth interceptors.
+   - Tests: Vitest for Navbar rendering, route navigation, Zustand store updates, i18n switching. Then use Playwright: Launch browser, navigate to app, screenshot desktop/mobile, check RTL on Persian switch, verify no console errors.
+
+2. **Authentication Features**
+   - Implement /login and /register pages with forms (use shadcn/ui Input, Button, Form), translated labels/errors.
+   - Handle API calls: POST /auth/register, POST /auth/login (store tokens, set auth state).
+   - Implement logout: POST /auth/logout, clear tokens/state.
+   - Token refresh: Axios interceptor for 401 -> POST /auth/refresh, update access token.
+   - ProtectedRoute component to guard auth-required pages.
+   - Add toast notifications for success/errors, translated.
+   - Tests: Vitest for form submissions, API mocks (msw), token storage, redirect on auth. Playwright: Navigate to login, fill form in en/fa, submit, check redirect, screenshot forms in both languages, test keyboard navigation, console errors.
+
+3. **Home/Dashboard Page**
+   - Fetch and display movie categories: trending, popular, top-rated, now-playing, upcoming (GET /movies/{category}?page=1), with translated headings.
+   - Use React Query for queries, horizontal carousels (custom or shadcn/ui) for movies (cards with poster, title, release, rating).
+   - Infinite scroll for more pages on scroll.
+   - Skeleton loaders during fetch.
+   - Tests: Vitest for data fetching, rendering of movie cards, infinite scroll behavior, error states. Playwright: Navigate to home, scroll for infinite load, switch languages (check RTL alignment), resize for responsive, screenshot carousels, interact with cards (hover/click), check accessibility (focus states).
+
+4. **Search Functionality**
+   - Implement global search bar in Navbar: GET /movies/search?q=...&page=...&year=...&with_genres=...&sort_by=..., translated placeholders.
+   - Dedicated /search page for results with filters (year dropdown, genre multiselect, sort options from shadcn/ui), translated.
+   - Paginated results with infinite scroll.
+   - Debounce search input.
+   - Tests: Vitest for search query params, filter updates, debouncing, result rendering. Playwright: Type in search, apply filters in en/fa, scroll results, check responsive layouts, screenshot results grid, verify no overlaps or console warnings.
+
+5. **Movie Details Page**
+   - Route: /movies/:tmdbId
+   - Fetch GET /movies/:tmdbId (details like title, overview, cast, genres), display hero section (backdrop, poster, info), similar movies (GET /movies/:tmdbId/similar), translated labels.
+   - If authenticated: Show bookmark status (GET /movies/:tmdbId/bookmark-status), toggle bookmark (POST /movies/:tmdbId/bookmark or unbookmark).
+   - Rating: POST /movies/:tmdbId/rating (e.g., star rating component).
+   - Tests: Vitest for detail fetching, conditional auth UI, bookmark/rating mutations. Playwright: Navigate to movie page, interact with bookmark/rate, switch languages, resize for mobile (check hero adaptation), screenshot details, test keyboard for rating, console checks.
+
+6. **Bookmarks and User Lists**
+   - Dedicated /bookmarks page: GET /movies/bookmarks?page=...&limit=..., translated.
+   - Grid view of bookmarked movies.
+   - Custom lists: e.g., /lists/:listName (GET /lists/:listName?...), add/remove (POST/DELETE /lists/:listName/...).
+   - UI for creating/managing lists (Dialog for add movie), translated.
+   - Tests: Vitest for list fetching, add/remove mutations, pagination. Playwright: Navigate to bookmarks, add/remove items, switch languages (RTL grids), resize, screenshot lists, interact with dialogs, accessibility tests.
+
+7. **Recommendations**
+   - Page: /recommendations
+   - Form to input query (POST /recommendations {query: "..."}), translated.
+   - Display recommended movies in a list/grid.
+   - Tests: Vitest for form submission, result rendering. Playwright: Submit query in en/fa, view results, check responsive, screenshot, console errors.
+
+8. **User Profile and Settings**
+   - Page: /profile
+   - Fetch GET /users/profile, display editable form (PUT /users/profile), translated.
+   - Stats: GET /users/stats (e.g., movies watched, ratings).
+   - Preferences: PUT /users/preferences (e.g., theme/language toggle).
+   - Privacy: PUT /users/privacy.
+   - Activity: PUT /users/activity.
+   - Export data: GET /users/export (download JSON/CSV).
+   - Delete account: DELETE /users/account (confirm dialog).
+   - Tests: Vitest for profile fetch/update, form validations, delete confirmation. Playwright: Edit profile in en/fa, toggle theme/language, screenshot forms, test responsiveness, keyboard nav for delete dialog.
+
+9. **Polish and Optimizations**
+   - Add dark/light mode toggle (integrate with user preferences).
+   - Responsive testing: Ensure mobile nav (hamburger menu), touch-friendly.
+   - Performance: Memoize components, optimize images (lazy load posters).
+   - Error boundaries, 404 page, translated.
+   - Tests: Vitest e2e-like navigation flows, theme switching. Playwright: Full app navigation in both languages, resize multiple viewports, check animations/transitions, accessibility audit (e.g., tab through app), screenshots for design review per design-review-agent.md.
+
+10. **Full Testing and Documentation**
+    - Run all Vitest tests, aim for 80%+ coverage.
+    - Use Playwright for comprehensive e2e: Test full flows (auth -> search -> details -> bookmark), bilingual, responsive, following design-review-agent.md phases.
+    - Write README: Setup (yarn install, yarn dev), env setup, i18n, API assumptions, running Playwright tests.
+    - Deploy preview (e.g., Vercel instructions).
+
+Start with Phase 1 and proceed sequentially, using Playwright MCP tools to verify/improve UI after each phase's code gen. Output code in full for each phase.
