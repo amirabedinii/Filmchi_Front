@@ -32,12 +32,12 @@ export default function HorizontalScroll({ children }: { children: ReactNode }) 
   };
 
   return (
-    <div className="relative group">
+    <div className="relative">
       {/* Left scroll button */}
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all"
           aria-label="Scroll left"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -48,7 +48,7 @@ export default function HorizontalScroll({ children }: { children: ReactNode }) 
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all"
           aria-label="Scroll right"
         >
           <ChevronRight className="w-4 h-4" />

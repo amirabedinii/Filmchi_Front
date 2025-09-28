@@ -13,7 +13,7 @@ export default function MovieCard({ movie }: Props) {
 
   return (
     <div className="w-36 sm:w-40 md:w-44 lg:w-48 shrink-0 group cursor-pointer">
-      <div className="aspect-[2/3] overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 shadow-sm group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+      <div className="aspect-[2/3] overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 shadow-sm group-hover:shadow-lg transition-all duration-300 relative">
         <img 
           src={img} 
           alt={movie.title} 
@@ -29,7 +29,7 @@ export default function MovieCard({ movie }: Props) {
       </div>
       <div className="mt-3 space-y-1">
         <div 
-          className="text-sm font-medium line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" 
+          className="text-sm font-medium line-clamp-1 text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors h-5" 
           title={movie.title}
         >
           {movie.title}
