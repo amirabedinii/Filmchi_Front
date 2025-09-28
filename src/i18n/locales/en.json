@@ -12,6 +12,37 @@
     "register": "Register",
     "home": "Home"
   }
+  ,
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "email_placeholder": "you@example.com",
+    "password_placeholder": "Your password",
+    "confirm_password_placeholder": "Repeat password",
+    "fill_required": "Please fill in all required fields.",
+    "password_mismatch": "Passwords do not match.",
+    "logging_in": "Logging in...",
+    "registering": "Registering...",
+    "login_success": "Logged in successfully.",
+    "register_success": "Registered successfully.",
+    "login_failed": "Login failed.",
+    "register_failed": "Register failed.",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "logout": "Logout"
+  }
+  ,
+  "home": {
+    "trending": "Trending",
+    "popular": "Popular",
+    "top_rated": "Top Rated",
+    "now_playing": "Now Playing",
+    "upcoming": "Upcoming",
+    "load_more": "Load more",
+    "loading": "Loading...",
+    "failed_to_load": "Failed to load."
+  }
 }
 
 

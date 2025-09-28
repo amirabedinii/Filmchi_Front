@@ -12,6 +12,37 @@
     "register": "ثبت‌نام",
     "home": "خانه"
   }
+  ,
+  "auth": {
+    "email": "ایمیل",
+    "password": "رمز عبور",
+    "confirm_password": "تکرار رمز عبور",
+    "email_placeholder": "you@example.com",
+    "password_placeholder": "رمز عبور شما",
+    "confirm_password_placeholder": "تکرار رمز",
+    "fill_required": "لطفاً همه فیلدهای ضروری را پر کنید.",
+    "password_mismatch": "رمزها یکسان نیستند.",
+    "logging_in": "در حال ورود...",
+    "registering": "در حال ثبت‌نام...",
+    "login_success": "ورود با موفقیت انجام شد.",
+    "register_success": "ثبت‌نام با موفقیت انجام شد.",
+    "login_failed": "ورود ناموفق بود.",
+    "register_failed": "ثبت‌نام ناموفق بود.",
+    "no_account": "حساب کاربری ندارید؟",
+    "have_account": "از قبل حساب دارید؟",
+    "logout": "خروج"
+  }
+  ,
+  "home": {
+    "trending": "داغ‌ترین‌ها",
+    "popular": "محبوب‌ها",
+    "top_rated": "پربازدیدها",
+    "now_playing": "در حال اکران",
+    "upcoming": "به‌زودی",
+    "load_more": "بیشتر",
+    "loading": "در حال بارگذاری...",
+    "failed_to_load": "خطا در بارگذاری."
+  }
 }
 
 
