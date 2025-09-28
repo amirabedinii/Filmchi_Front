@@ -32,8 +32,25 @@ const categoryPathMap: Record<CategoryKey, string> = {
 
 export async function fetchCategory(category: CategoryKey, page = 1) {
   const apiPath = categoryPathMap[category];
-  const { data } = await api.get<MoviesResponse>(`/movies/${apiPath}`, { params: { page } });
-  return data;
+  const { data } = await api.get(`/movies/${apiPath}`, { params: { page } });
+  
+  // Transform snake_case API response to camelCase frontend format
+  return {
+    page: data.page,
+    totalPages: data.total_pages ?? data.totalPages,
+    results: data.results.map((movie: any) => ({
+      id: movie.id,
+      title: movie.title,
+      posterPath: movie.poster_path ?? movie.posterPath ?? null,
+      releaseDate: movie.release_date ?? movie.releaseDate ?? null,
+      voteAverage: movie.vote_average ?? movie.voteAverage ?? null,
+      overview: movie.overview,
+      genreIds: movie.genre_ids ?? movie.genreIds,
+      adult: movie.adult,
+      originalLanguage: movie.original_language ?? movie.originalLanguage,
+      popularity: movie.popularity,
+    }))
+  };
 }
 
 export type SearchFilters = {
@@ -68,8 +85,25 @@ export async function searchMovies(filters: SearchFilters, page = 1) {
     params.sort_by = `${filters.sortBy}.desc`; // Default to descending
   }
   
-  const { data } = await api.get<MoviesResponse>('/movies/search', { params });
-  return data;
+  const { data } = await api.get('/movies/search', { params });
+  
+  // Transform snake_case API response to camelCase frontend format
+  return {
+    page: data.page,
+    totalPages: data.total_pages ?? data.totalPages,
+    results: data.results.map((movie: any) => ({
+      id: movie.id,
+      title: movie.title,
+      posterPath: movie.poster_path ?? movie.posterPath ?? null,
+      releaseDate: movie.release_date ?? movie.releaseDate ?? null,
+      voteAverage: movie.vote_average ?? movie.voteAverage ?? null,
+      overview: movie.overview,
+      genreIds: movie.genre_ids ?? movie.genreIds,
+      adult: movie.adult,
+      originalLanguage: movie.original_language ?? movie.originalLanguage,
+      popularity: movie.popularity,
+    }))
+  };
 }
 
 export type Genre = {
