@@ -42,6 +42,37 @@
     "load_more": "Load more",
     "loading": "Loading...",
     "failed_to_load": "Failed to load."
+  },
+  "search": {
+    "title": "Search Results",
+    "placeholder": "Search movies...",
+    "no_results": "No movies found",
+    "no_results_desc": "Try adjusting your search terms or filters",
+    "search_for": "Search results for",
+    "filters": "Filters",
+    "clear_filters": "Clear Filters",
+    "apply_filters": "Apply Filters",
+    "genre": "Genre",
+    "year": "Year",
+    "rating": "Minimum Rating",
+    "sort_by": "Sort By",
+    "sort_order": "Order",
+    "popularity": "Popularity",
+    "release_date": "Release Date",
+    "vote_average": "Rating",
+    "title": "Title",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "all_genres": "All Genres",
+    "any_year": "Any Year",
+    "any_rating": "Any Rating",
+    "search_history": "Recent Searches",
+    "clear_history": "Clear History",
+    "suggestions": "Suggestions",
+    "searching": "Searching...",
+    "search_failed": "Search failed. Please try again.",
+    "results_count": "{{count}} results found",
+    "results_count_plural": "{{count}} results found"
   }
 }
 

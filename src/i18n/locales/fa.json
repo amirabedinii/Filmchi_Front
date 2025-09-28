@@ -42,6 +42,37 @@
     "load_more": "بیشتر",
     "loading": "در حال بارگذاری...",
     "failed_to_load": "خطا در بارگذاری."
+  },
+  "search": {
+    "title": "نتایج جست‌وجو",
+    "placeholder": "جست‌وجوی فیلم...",
+    "no_results": "فیلمی یافت نشد",
+    "no_results_desc": "عبارت جست‌وجو یا فیلترها را تغییر دهید",
+    "search_for": "نتایج جست‌وجو برای",
+    "filters": "فیلترها",
+    "clear_filters": "پاک کردن فیلترها",
+    "apply_filters": "اعمال فیلترها",
+    "genre": "ژانر",
+    "year": "سال",
+    "rating": "حداقل امتیاز",
+    "sort_by": "مرتب‌سازی بر اساس",
+    "sort_order": "ترتیب",
+    "popularity": "محبوبیت",
+    "release_date": "تاریخ انتشار",
+    "vote_average": "امتیاز",
+    "title": "عنوان",
+    "asc": "صعودی",
+    "desc": "نزولی",
+    "all_genres": "همه ژانرها",
+    "any_year": "هر سالی",
+    "any_rating": "هر امتیازی",
+    "search_history": "جست‌وجوهای اخیر",
+    "clear_history": "پاک کردن تاریخچه",
+    "suggestions": "پیشنهادات",
+    "searching": "در حال جست‌وجو...",
+    "search_failed": "جست‌وجو ناموفق بود. دوباره تلاش کنید.",
+    "results_count": "{{count}} نتیجه یافت شد",
+    "results_count_plural": "{{count}} نتیجه یافت شد"
   }
 }
 

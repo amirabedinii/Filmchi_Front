@@ -1,10 +1,11 @@
-import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/stores/useUiStore';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { logout as logoutReq } from '@/services/auth';
 import toast from 'react-hot-toast';
+import { Search } from 'lucide-react';
 
 export default function AppLayout() {
   const { t, i18n } = useTranslation();
@@ -14,24 +15,46 @@ export default function AppLayout() {
   const setTheme = useUiStore((s) => s.setTheme);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Initialize search query from URL params
+  useEffect(() => {
+    const query = searchParams.get('q') || '';
+    setSearchQuery(query);
+  }, [searchParams]);
 
   useEffect(() => {
     i18n.changeLanguage(language);
     document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
   }, [language, i18n]);
 
+  // Handle search form submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
   return (
     <div className="min-h-full flex flex-col bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100">
       <header className="border-b border-zinc-200 dark:border-zinc-800">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <Link to="/" className="font-semibold">{t('app.title')}</Link>
-          <div className="flex-1 max-w-md">
-            <input
-              aria-label={t('app.search_placeholder')}
-              className="w-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 rounded px-3 py-1.5 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder={t('app.search_placeholder')}
-            />
-          </div>
+          <form onSubmit={handleSearch} className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-4 h-4" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label={t('app.search_placeholder')}
+                className="w-full pl-9 pr-3 py-1.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 rounded text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder={t('app.search_placeholder')}
+              />
+            </div>
+          </form>
           <nav className="flex items-center gap-2 sm:gap-4">
             <NavLink to="/" className={({ isActive }) => isActive ? 'font-medium' : ''}>{t('app.home')}</NavLink>
             {!isAuthenticated && (
