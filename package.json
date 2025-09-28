@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --port 5173",
+    "preview": "vite preview --port 1700",
     "test": "vitest",
     "test:ui": "vitest --ui --open",
     "lint": "echo 'No linter configured'"

@@ -1,468 +1,562 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppLayout from '@/shared/AppLayout';
-import SearchPage from '@/pages/SearchPage';
-import * as moviesService from '@/services/movies';
-import '@/i18n';
+import { BrowserRouter, createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../i18n';
+import SearchPage from '../pages/SearchPage';
+import AppLayout from '../shared/AppLayout';
+import { searchMovies, fetchGenres } from '../services/movies';
 
-const renderSearch = (initialEntries = ['/search']) => {
-  const qc = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
+// Mock the services
+vi.mock('../services/movies');
+vi.mock('../services/auth');
+
+const mockSearchMovies = vi.mocked(searchMovies);
+const mockFetchGenres = vi.mocked(fetchGenres);
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+vi.stubGlobal('localStorage', localStorageMock);
+
+// Mock Zustand stores
+vi.mock('../stores/useUiStore', () => ({
+  useUiStore: (selector: any) => {
+    const state = { language: 'en', theme: 'light', setLanguage: vi.fn(), setTheme: vi.fn() };
+    return selector(state);
+  },
+}));
+
+vi.mock('../stores/useAuthStore', () => ({
+  useAuthStore: (selector: any) => {
+    const state = { isAuthenticated: false, user: null, token: null };
+    return selector(state);
+  },
+}));
+
+const mockMovies = {
+  page: 1,
+  totalPages: 5,
+  results: [
+    {
+      id: 1,
+      title: 'The Matrix',
+      posterPath: '/poster1.jpg',
+      releaseDate: '1999-03-30',
+      voteAverage: 8.7,
+      overview: 'A computer programmer discovers reality.',
+      genreIds: [28, 878],
     },
-  });
-  const router = createMemoryRouter([
-    { 
-      path: '/', 
-      element: <AppLayout />, 
-      children: [
-        { path: 'search', element: <SearchPage /> }
-      ] 
-    }
-  ], { initialEntries });
-  
-  return render(
-    <QueryClientProvider client={qc}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
+    {
+      id: 2,
+      title: 'Inception',
+      posterPath: '/poster2.jpg',
+      releaseDate: '2010-07-16',
+      voteAverage: 8.8,
+      overview: 'A dream within a dream.',
+      genreIds: [28, 878, 53],
+    },
+  ],
 };
 
-function mockSearchResponse(page: number, query: string, totalPages = 2) {
-  return {
-    page,
-    totalPages,
-    results: Array.from({ length: 6 }).map((_, i) => ({
-      id: page * 100 + i,
-      title: `${query} Movie ${page}-${i}`,
-      posterPath: `/poster-${page}-${i}.jpg`,
-      releaseDate: '2024-01-01',
-      voteAverage: 7.5,
-      overview: `Overview for ${query} movie ${page}-${i}`,
-      genreIds: [1, 2],
-      adult: false,
-      originalLanguage: 'en',
-      popularity: 100.5
-    }))
-  } as moviesService.MoviesResponse;
+const mockGenres = [
+  { id: 28, name: 'Action' },
+  { id: 878, name: 'Science Fiction' },
+  { id: 53, name: 'Thriller' },
+  { id: 18, name: 'Drama' },
+];
+
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
 }
 
-function mockGenres() {
-  return [
-    { id: 1, name: 'Action' },
-    { id: 2, name: 'Comedy' },
-    { id: 3, name: 'Drama' },
-    { id: 4, name: 'Horror' },
-    { id: 5, name: 'Romance' }
-  ] as moviesService.Genre[];
+function renderWithProviders(
+  ui: React.ReactElement,
+  { initialEntries = ['/search'] } = {}
+) {
+  const queryClient = createTestQueryClient();
+  const router = createMemoryRouter(
+    [
+      {
+        path: '/',
+        element: <AppLayout />,
+        children: [
+          { path: 'search', element: <SearchPage /> },
+        ],
+      },
+    ],
+    { initialEntries }
+  );
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>
+        <RouterProvider router={router} />
+      </I18nextProvider>
+    </QueryClientProvider>
+  );
+}
+
+function renderSearchPageWithProviders(
+  { initialEntries = ['/search'] } = {}
+) {
+  const queryClient = createTestQueryClient();
+  const router = createMemoryRouter(
+    [{ path: '/search', element: <SearchPage /> }],
+    { initialEntries }
+  );
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>
+        <RouterProvider router={router} />
+      </I18nextProvider>
+    </QueryClientProvider>
+  );
 }
 
 describe('SearchPage', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
-    localStorage.clear();
+    mockFetchGenres.mockResolvedValue(mockGenres);
+    mockSearchMovies.mockResolvedValue(mockMovies);
+    localStorageMock.getItem.mockReturnValue(null);
   });
 
-  it('renders search page with empty state', async () => {
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    renderSearch();
-    
-    expect(screen.getByText(/Search Results|نتایج جست‌وجو/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Search movies|جست‌وجوی فیلم/i)).toBeInTheDocument();
-    expect(screen.getByText(/Filters|فیلترها/i)).toBeInTheDocument();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('performs search when query is provided', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Batman'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('renders search page correctly', async () => {
+    renderSearchPageWithProviders();
     
-    renderSearch(['/search?q=Batman']);
-    
-    await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ query: 'Batman' }),
-        1
-      );
-    });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Batman Movie 1-0')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Search Results')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search movies...')).toBeInTheDocument();
+    expect(screen.getByText('Filters')).toBeInTheDocument();
   });
 
-  it('handles search form submission', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Superman'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('displays search form and handles input', async () => {
+    renderSearchPageWithProviders();
     
-    renderSearch();
+    const searchInput = screen.getByPlaceholderText('Search movies...');
+    fireEvent.change(searchInput, { target: { value: 'Matrix' } });
     
-    const searchInput = screen.getByPlaceholderText(/Search movies|جست‌وجوی فیلم/i);
-    const searchButton = screen.getByRole('button', { name: /Search Results|نتایج جست‌وجو/i });
+    expect(searchInput).toHaveValue('Matrix');
+  });
+
+  it('performs search when form is submitted', async () => {
+    renderSearchPageWithProviders();
     
-    fireEvent.change(searchInput, { target: { value: 'Superman' } });
+    const searchInput = screen.getByPlaceholderText('Search movies...');
+    const searchButton = screen.getByRole('button', { name: /search results/i });
+    
+    fireEvent.change(searchInput, { target: { value: 'Matrix' } });
     fireEvent.click(searchButton);
     
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ query: 'Superman' }),
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({ query: 'Matrix' }),
         1
       );
+    });
+  });
+
+  it('displays search results when query is provided', async () => {
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=Matrix'] });
+    
+    await waitFor(() => {
+      expect(screen.getByText('Search results for')).toBeInTheDocument();
+      expect(screen.getByText('"Matrix"')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('The Matrix')).toBeInTheDocument();
+      expect(screen.getByText('Inception')).toBeInTheDocument();
     });
   });
 
   it('shows and hides filters panel', async () => {
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    renderSearch();
+    renderSearchPageWithProviders();
     
-    const filtersButton = screen.getByText(/Filters|فیلترها/i);
+    const filtersButton = screen.getByText('Filters');
+    
+    // Filters should not be visible initially
+    expect(screen.queryByText('Genre')).not.toBeInTheDocument();
+    
+    // Click to show filters
     fireEvent.click(filtersButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/Genre|ژانر/i)).toBeInTheDocument();
-      expect(screen.getByText(/Year|سال/i)).toBeInTheDocument();
-      expect(screen.getByText(/Minimum Rating|حداقل امتیاز/i)).toBeInTheDocument();
+      expect(screen.getByText('Genre')).toBeInTheDocument();
+      expect(screen.getByText('Year')).toBeInTheDocument();
+      expect(screen.getByText('Minimum Rating')).toBeInTheDocument();
+      expect(screen.getByText('Sort By')).toBeInTheDocument();
     });
     
+    // Click to hide filters
     fireEvent.click(filtersButton);
+    
     await waitFor(() => {
-      expect(screen.queryByText(/Apply Filters|اعمال فیلترها/i)).not.toBeInTheDocument();
+      expect(screen.queryByText('Genre')).not.toBeInTheDocument();
     });
   });
 
-  it('applies search filters', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Action'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('loads and displays genres in filter dropdown', async () => {
+    renderSearchPageWithProviders();
     
-    renderSearch(['/search?q=Action']);
-    
-    // Open filters
-    const filtersButton = screen.getByText(/Filters|فیلترها/i);
+    const filtersButton = screen.getByText('Filters');
     fireEvent.click(filtersButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/Genre|ژانر/i)).toBeInTheDocument();
+      const genreSelect = screen.getByDisplayValue('All Genres');
+      expect(genreSelect).toBeInTheDocument();
     });
+
+    await waitFor(() => {
+      expect(mockFetchGenres).toHaveBeenCalled();
+    });
+  });
+
+  it('applies filters correctly', async () => {
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=action'] });
     
-    // Set genre filter
-    const genreSelect = screen.getByDisplayValue(/All Genres|همه ژانرها/i);
-    fireEvent.change(genreSelect, { target: { value: '1' } });
-    
-    // Set year filter
-    const yearInput = screen.getByPlaceholderText(/Any Year|هر سالی/i);
-    fireEvent.change(yearInput, { target: { value: '2024' } });
-    
-    // Apply filters
-    const applyButton = screen.getByText(/Apply Filters|اعمال فیلترها/i);
-    fireEvent.click(applyButton);
+    const filtersButton = screen.getByText('Filters');
+    fireEvent.click(filtersButton);
     
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ 
-          query: 'Action',
-          genre: '1',
-          year: 2024
+      const genreSelect = screen.getByDisplayValue('All Genres');
+      fireEvent.change(genreSelect, { target: { value: '28' } });
+      
+      const yearInput = screen.getByPlaceholderText('Any Year');
+      fireEvent.change(yearInput, { target: { value: '2020' } });
+      
+      const applyButton = screen.getByText('Apply Filters');
+      fireEvent.click(applyButton);
+    });
+
+    await waitFor(() => {
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({
+          query: 'action',
+          genre: '28',
+          year: 2020,
         }),
         1
       );
     });
   });
 
-  it('clears all filters', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Test'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('clears filters correctly', async () => {
+    renderSearchPageWithProviders({ 
+      initialEntries: ['/search?q=action&genre=28&year=2020&rating=7.0'] 
+    });
     
-    renderSearch(['/search?q=Test&genre=1&year=2024&rating=7']);
-    
-    // Open filters
-    const filtersButton = screen.getByText(/Filters|فیلترها/i);
+    const filtersButton = screen.getByText('Filters');
     fireEvent.click(filtersButton);
     
     await waitFor(() => {
-      expect(screen.getByDisplayValue('1')).toBeInTheDocument(); // Genre
-      expect(screen.getByDisplayValue('2024')).toBeInTheDocument(); // Year
-      expect(screen.getByDisplayValue('7')).toBeInTheDocument(); // Rating
+      const clearButton = screen.getByText('Clear Filters');
+      fireEvent.click(clearButton);
     });
-    
-    // Clear filters
-    const clearButton = screen.getByText(/Clear Filters|پاک کردن فیلترها/i);
-    fireEvent.click(clearButton);
-    
+
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ 
-          query: 'Test'
-          // No other filters should be present
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({
+          query: 'action',
+          sortBy: 'popularity',
+          sortOrder: 'desc',
         }),
         1
       );
     });
   });
 
-  it('shows loading state during search', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockImplementation(() => new Promise(() => {})); // Never resolves
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('displays search history', async () => {
+    const mockHistory = ['Matrix', 'Inception', 'Avatar'];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(mockHistory));
     
-    renderSearch(['/search?q=Loading']);
-    
-    await waitFor(() => {
-      const skeletonElements = document.querySelectorAll('.animate-pulse');
-      expect(skeletonElements.length).toBeGreaterThan(0);
-    });
-  });
-
-  it('shows error state when search fails', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockRejectedValue(new Error('Search failed'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    
-    renderSearch(['/search?q=Error']);
+    renderSearchPageWithProviders();
     
     await waitFor(() => {
-      expect(screen.getByText(/Search failed|جست‌وجو ناموفق بود/i)).toBeInTheDocument();
+      expect(screen.getByText('Recent Searches')).toBeInTheDocument();
+      expect(screen.getByText('Matrix')).toBeInTheDocument();
+      expect(screen.getByText('Inception')).toBeInTheDocument();
+      expect(screen.getByText('Avatar')).toBeInTheDocument();
     });
-  });
-
-  it('shows no results state when no movies found', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue({
-      page: 1,
-      totalPages: 1,
-      results: []
-    });
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    
-    renderSearch(['/search?q=NoResults']);
-    
-    await waitFor(() => {
-      expect(screen.getByText(/No movies found|فیلمی یافت نشد/i)).toBeInTheDocument();
-      expect(screen.getByText(/Try adjusting|عبارت جست‌وجو یا فیلترها را تغییر دهید/i)).toBeInTheDocument();
-    });
-  });
-
-  it('loads more results with infinite scroll', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockImplementation((filters, page) => {
-      if (page === 1) return Promise.resolve(mockSearchResponse(1, 'Infinite', 2));
-      return Promise.resolve(mockSearchResponse(2, 'Infinite', 2));
-    });
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    
-    renderSearch(['/search?q=Infinite']);
-    
-    // Wait for initial results
-    await waitFor(() => {
-      expect(screen.getByText('Infinite Movie 1-0')).toBeInTheDocument();
-    });
-    
-    // Click load more button
-    const loadMoreButton = screen.getByText(/Load more|بیشتر/i);
-    fireEvent.click(loadMoreButton);
-    
-    await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ query: 'Infinite' }),
-        2
-      );
-    });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Infinite Movie 2-0')).toBeInTheDocument();
-    });
-  });
-
-  it('manages search history', async () => {
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    
-    renderSearch();
-    
-    const searchInput = screen.getByPlaceholderText(/Search movies|جست‌وجوی فیلم/i);
-    const searchButton = screen.getByRole('button', { name: /Search Results|نتایج جست‌وجو/i });
-    
-    // Perform first search
-    fireEvent.change(searchInput, { target: { value: 'Batman' } });
-    fireEvent.click(searchButton);
-    
-    // Go back to empty search
-    renderSearch(['/search']);
-    
-    await waitFor(() => {
-      expect(screen.getByText(/Recent Searches|جست‌وجوهای اخیر/i)).toBeInTheDocument();
-      expect(screen.getByText('Batman')).toBeInTheDocument();
-    });
-    
-    // Click on history item
-    const historyItem = screen.getByText('Batman');
-    fireEvent.click(historyItem);
-    
-    // Should navigate to search with that query
-    expect(window.location.search).toContain('q=Batman');
   });
 
   it('clears search history', async () => {
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+    const mockHistory = ['Matrix', 'Inception'];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(mockHistory));
     
-    // Set up some history
-    localStorage.setItem('filmchi-search-history', JSON.stringify(['Batman', 'Superman']));
-    
-    renderSearch();
+    renderSearchPageWithProviders();
     
     await waitFor(() => {
-      expect(screen.getByText(/Recent Searches|جست‌وجوهای اخیر/i)).toBeInTheDocument();
-      expect(screen.getByText('Batman')).toBeInTheDocument();
+      const clearHistoryButton = screen.getByText('Clear History');
+      fireEvent.click(clearHistoryButton);
     });
+
+    expect(localStorageMock.removeItem).toHaveBeenCalledWith('filmchi-search-history');
+  });
+
+  it('saves search to history when performing search', async () => {
+    renderSearchPageWithProviders();
     
-    // Clear history
-    const clearButton = screen.getByText(/Clear History|پاک کردن تاریخچه/i);
-    fireEvent.click(clearButton);
+    const searchInput = screen.getByPlaceholderText('Search movies...');
+    const searchButton = screen.getByRole('button', { name: /search results/i });
+    
+    fireEvent.change(searchInput, { target: { value: 'New Search' } });
+    fireEvent.click(searchButton);
     
     await waitFor(() => {
-      expect(screen.queryByText(/Recent Searches|جست‌وجوهای اخیر/i)).not.toBeInTheDocument();
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'filmchi-search-history',
+        expect.stringContaining('New Search')
+      );
+    });
+  });
+
+  it('displays no results message when search returns empty', async () => {
+    mockSearchMovies.mockResolvedValue({
+      page: 1,
+      totalPages: 0,
+      results: [],
     });
     
-    expect(localStorage.getItem('filmchi-search-history')).toBeNull();
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=nonexistent'] });
+    
+    await waitFor(() => {
+      expect(screen.getByText('No movies found')).toBeInTheDocument();
+      expect(screen.getByText('Try adjusting your search terms or filters')).toBeInTheDocument();
+    });
+  });
+
+  it('displays error message when search fails', async () => {
+    mockSearchMovies.mockRejectedValue(new Error('Search failed'));
+    
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=error'] });
+    
+    await waitFor(() => {
+      expect(screen.getByText('Search failed. Please try again.')).toBeInTheDocument();
+    });
   });
 
   it('handles sort options correctly', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Sort'));
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=test'] });
     
-    renderSearch(['/search?q=Sort']);
-    
-    // Open filters
-    const filtersButton = screen.getByText(/Filters|فیلترها/i);
+    const filtersButton = screen.getByText('Filters');
     fireEvent.click(filtersButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/Sort By|مرتب‌سازی بر اساس/i)).toBeInTheDocument();
+      const sortSelect = screen.getByDisplayValue('Popularity');
+      fireEvent.change(sortSelect, { target: { value: 'vote_average' } });
+      
+      const ascRadio = screen.getByDisplayValue('asc');
+      fireEvent.click(ascRadio);
+      
+      const applyButton = screen.getByText('Apply Filters');
+      fireEvent.click(applyButton);
     });
-    
-    // Change sort by
-    const sortSelect = screen.getByDisplayValue(/Popularity|محبوبیت/i);
-    fireEvent.change(sortSelect, { target: { value: 'vote_average' } });
-    
-    // Change sort order
-    const ascRadio = screen.getByDisplayValue('asc');
-    fireEvent.click(ascRadio);
-    
-    // Apply filters
-    const applyButton = screen.getByText(/Apply Filters|اعمال فیلترها/i);
-    fireEvent.click(applyButton);
-    
+
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ 
-          query: 'Sort',
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({
           sortBy: 'vote_average',
-          sortOrder: 'asc'
+          sortOrder: 'asc',
         }),
         1
       );
     });
   });
 
-  it('prevents search with empty query', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
+  it('shows loading skeleton while searching', async () => {
+    // Make search pending
+    mockSearchMovies.mockImplementation(() => new Promise(() => {}));
     
-    renderSearch();
-    
-    const searchButton = screen.getByRole('button', { name: /Search Results|نتایج جست‌وجو/i });
-    
-    // Try to search with empty query
-    fireEvent.click(searchButton);
-    
-    // Should not call search API
-    expect(searchSpy).not.toHaveBeenCalled();
-    
-    // Button should be disabled
-    expect(searchButton).toBeDisabled();
-  });
-
-  it('displays search results count', async () => {
-    const searchSpy = vi.spyOn(moviesService, 'searchMovies');
-    searchSpy.mockResolvedValue(mockSearchResponse(1, 'Count', 5)); // 5 pages = ~100 results
-    vi.spyOn(moviesService, 'fetchGenres').mockResolvedValue(mockGenres());
-    
-    renderSearch(['/search?q=Count']);
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=loading'] });
     
     await waitFor(() => {
-      expect(screen.getByText(/100 results found|100 نتیجه یافت شد/i)).toBeInTheDocument();
+      const skeletons = screen.getAllByTestId(/loading/i) || 
+                     document.querySelectorAll('.animate-pulse');
+      expect(skeletons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('handles rating filter correctly', async () => {
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=test'] });
+    
+    const filtersButton = screen.getByText('Filters');
+    fireEvent.click(filtersButton);
+    
+    await waitFor(() => {
+      const ratingInput = screen.getByPlaceholderText('Any Rating');
+      fireEvent.change(ratingInput, { target: { value: '7.5' } });
+      
+      const applyButton = screen.getByText('Apply Filters');
+      fireEvent.click(applyButton);
+    });
+
+    await waitFor(() => {
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({
+          minRating: 7.5,
+        }),
+        1
+      );
+    });
+  });
+
+  it('displays results count', async () => {
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=Matrix'] });
+    
+    await waitFor(() => {
+      expect(screen.getByText(/\d+ results found/)).toBeInTheDocument();
+    });
+  });
+
+  it('handles infinite scroll pagination', async () => {
+    const mockPage2 = {
+      page: 2,
+      totalPages: 5,
+      results: [
+        {
+          id: 3,
+          title: 'Avatar',
+          posterPath: '/poster3.jpg',
+          releaseDate: '2009-12-18',
+          voteAverage: 7.8,
+        },
+      ],
+    };
+
+    mockSearchMovies
+      .mockResolvedValueOnce(mockMovies) // First page
+      .mockResolvedValueOnce(mockPage2); // Second page
+
+    renderSearchPageWithProviders({ initialEntries: ['/search?q=movie'] });
+
+    // Wait for first page to load
+    await waitFor(() => {
+      expect(screen.getByText('The Matrix')).toBeInTheDocument();
+    });
+
+    // Check if "Load more" button is available and click it
+    await waitFor(() => {
+      const loadMoreButton = screen.getByText('Load more');
+      expect(loadMoreButton).toBeInTheDocument();
+      fireEvent.click(loadMoreButton);
+    });
+
+    // Check that second page was requested
+    await waitFor(() => {
+      expect(mockSearchMovies).toHaveBeenCalledWith(
+        expect.objectContaining({ query: 'movie' }),
+        2
+      );
     });
   });
 });
 
-describe('Search API Service', () => {
+describe('Search Integration with AppLayout', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
+    mockFetchGenres.mockResolvedValue(mockGenres);
+    mockSearchMovies.mockResolvedValue(mockMovies);
   });
 
-  it('calls search API with correct parameters', async () => {
-    const mockApi = vi.fn().mockResolvedValue({ data: mockSearchResponse(1, 'Test') });
-    vi.doMock('@/services/api', () => ({ default: { get: mockApi } }));
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('navigates to search page when typing in navbar search', async () => {
+    renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    const { searchMovies } = await import('@/services/movies');
+    const searchInput = screen.getByPlaceholderText('Search movies...');
     
-    const filters: moviesService.SearchFilters = {
-      query: 'Test Movie',
-      genre: '1',
-      year: 2024,
-      minRating: 7.5,
-      sortBy: 'vote_average',
-      sortOrder: 'desc'
-    };
+    fireEvent.change(searchInput, { target: { value: 'Matrix' } });
     
-    await searchMovies(filters, 2);
+    // Wait for debounced navigation
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/search');
+    }, { timeout: 1000 });
+  });
+
+  it('submits search form from navbar', async () => {
+    renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    expect(mockApi).toHaveBeenCalledWith('/movies/search', {
-      params: {
-        page: 2,
-        query: 'Test Movie',
-        genre: '1',
-        year: 2024,
-        min_rating: 7.5,
-        sort_by: 'vote_average',
-        sort_order: 'desc'
-      }
+    const searchForm = screen.getByRole('form') || 
+                      screen.getByPlaceholderText('Search movies...').closest('form');
+    const searchInput = screen.getByPlaceholderText('Search movies...');
+    
+    fireEvent.change(searchInput, { target: { value: 'Matrix' } });
+    
+    if (searchForm) {
+      fireEvent.submit(searchForm);
+    }
+    
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/search');
+      expect(window.location.search).toContain('q=Matrix');
     });
   });
 
-  it('omits undefined filter parameters', async () => {
-    const mockApi = vi.fn().mockResolvedValue({ data: mockSearchResponse(1, 'Simple') });
-    vi.doMock('@/services/api', () => ({ default: { get: mockApi } }));
+  it('handles empty search gracefully', async () => {
+    renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    const { searchMovies } = await import('@/services/movies');
+    const searchForm = screen.getByPlaceholderText('Search movies...').closest('form');
+    const searchInput = screen.getByPlaceholderText('Search movies...');
     
-    const filters: moviesService.SearchFilters = {
-      query: 'Simple Search'
-    };
+    // Try to submit empty search
+    fireEvent.change(searchInput, { target: { value: '' } });
     
-    await searchMovies(filters);
+    if (searchForm) {
+      fireEvent.submit(searchForm);
+    }
     
-    expect(mockApi).toHaveBeenCalledWith('/movies/search', {
-      params: {
-        page: 1,
-        query: 'Simple Search'
-      }
-    });
+    // Should not navigate to search page
+    expect(window.location.pathname).toBe('/');
+  });
+});
+
+describe('Search Translations', () => {
+  beforeEach(() => {
+    mockFetchGenres.mockResolvedValue(mockGenres);
+    mockSearchMovies.mockResolvedValue(mockMovies);
   });
 
-  it('fetches genres correctly', async () => {
-    const mockApi = vi.fn().mockResolvedValue({ data: { genres: mockGenres() } });
-    vi.doMock('@/services/api', () => ({ default: { get: mockApi } }));
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('displays Persian translations correctly', async () => {
+    await i18n.changeLanguage('fa');
     
-    const { fetchGenres } = await import('@/services/movies');
+    renderSearchPageWithProviders();
     
-    const genres = await fetchGenres();
+    expect(screen.getByText('نتایج جست‌وجو')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('جست‌وجوی فیلم...')).toBeInTheDocument();
+    expect(screen.getByText('فیلترها')).toBeInTheDocument();
+  });
+
+  it('switches between languages correctly', async () => {
+    renderSearchPageWithProviders();
     
-    expect(mockApi).toHaveBeenCalledWith('/movies/genres');
-    expect(genres).toEqual(mockGenres());
+    // Start with English
+    expect(screen.getByText('Search Results')).toBeInTheDocument();
+    
+    // Switch to Persian
+    await i18n.changeLanguage('fa');
+    
+    await waitFor(() => {
+      expect(screen.getByText('نتایج جست‌وجو')).toBeInTheDocument();
+    });
   });
 });

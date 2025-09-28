@@ -291,7 +291,10 @@ export default function SearchPage() {
               </label>
               <select
                 value={localSortBy}
-                onChange={(e) => setLocalSortBy(e.target.value as SearchFilters['sortBy'])}
+                onChange={(e) => {
+                  const value = e.target.value as SearchFilters['sortBy'] | undefined;
+                  if (value) setLocalSortBy(value);
+                }}
                 className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               >
                 <option value="popularity">{t('search.popularity')}</option>

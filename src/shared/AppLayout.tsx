@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { logout as logoutReq } from '@/services/auth';
 import toast from 'react-hot-toast';
 import { Search } from 'lucide-react';
+import { useDebounce } from '../hooks/useDebounce';
 
 export default function AppLayout() {
   const { t, i18n } = useTranslation();
@@ -17,6 +18,8 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 500);
 
   // Initialize search query from URL params
   useEffect(() => {
@@ -29,12 +32,23 @@ export default function AppLayout() {
     document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
   }, [language, i18n]);
 
+  useEffect(() => {
+    if(debouncedSearchText.trim()){
+      navigate(`/search?q=${encodeURIComponent(debouncedSearchText.trim())}`);
+    }
+    // Optionally, navigate to a default route if search text is cleared.
+  }, [debouncedSearchText, navigate]);
+
   // Handle search form submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     
     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
   };
 
   return (
@@ -47,8 +61,8 @@ export default function AppLayout() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-4 h-4" />
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchText}
+                onChange={handleInputChange}
                 aria-label={t('app.search_placeholder')}
                 className="w-full pl-9 pr-3 py-1.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 rounded text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder={t('app.search_placeholder')}
