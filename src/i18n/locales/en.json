@@ -10,7 +10,8 @@
     "persian": "Persian",
     "login": "Login",
     "register": "Register",
-    "home": "Home"
+    "home": "Home",
+    "lists": "Lists"
   }
   ,
   "auth": {
@@ -118,7 +119,59 @@
     "movies_found": "{{count}} movies found",
     "movies_found_plural": "{{count}} movies found",
     "no_movies_found": "No movies found",
+    "no_movies_available": "No movies available for this category",
     "retry": "Retry"
+  },
+  "bookmarks": {
+    "title": "My Bookmarks",
+    "description": "Movies you've saved to watch later",
+    "back": "Back",
+    "loading": "Loading bookmarks...",
+    "loading_more": "Loading more...",
+    "load_more": "Load More",
+    "error_loading": "Failed to load bookmarks",
+    "error_description": "There was an error loading your bookmarks. Please try again.",
+    "retry": "Try Again",
+    "total_count": "{{count}} bookmarked movies",
+    "empty_title": "No bookmarks yet",
+    "empty_description": "Start adding movies to your bookmarks by clicking the bookmark button on any movie.",
+    "browse_movies": "Browse Movies"
+  },
+  "lists": {
+    "watchlist": "Watchlist",
+    "favorites": "Favorites", 
+    "watched": "Watched",
+    "back": "Back",
+    "back_to_home": "Back to Home",
+    "invalid_list": "Invalid List",
+    "description": "Manage your {{listName}} collection",
+    "loading": "Loading list...",
+    "loading_more": "Loading more...",
+    "load_more": "Load More",
+    "error_loading": "Failed to load list",
+    "error_description": "There was an error loading your list. Please try again.",
+    "retry": "Try Again",
+    "total_count": "{{count}} movies in list",
+    "empty_title": "Your list is empty",
+    "empty_description": "Add movies to start building your collection.",
+    "add_movie": "Add Movie",
+    "add_movie_title": "Add Movie to List",
+    "add_first_movie": "Add Your First Movie",
+    "search_movies": "Search for movies to add",
+    "searching": "Searching...",
+    "no_search_results": "No movies found for your search",
+    "start_typing": "Start typing to search for movies",
+    "added_successfully": "Movie added to list successfully",
+    "removed_successfully": "Movie removed from list successfully",
+    "add_failed": "Failed to add movie to list",
+    "remove_failed": "Failed to remove movie from list",
+    "search_failed": "Search failed. Please try again.",
+    "sort": {
+      "addedAt_desc": "Recently Added",
+      "addedAt_asc": "Oldest First",
+      "title_asc": "Title A-Z", 
+      "title_desc": "Title Z-A"
+    }
   }
 }
 

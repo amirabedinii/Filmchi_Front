@@ -327,20 +327,20 @@ export async function rateMovie(tmdbId: string, rating: number) {
 
 // Bookmarks API
 export type Bookmark = {
-  id: string;
-  tmdbId: number;
-  movieTitle: string;
-  moviePosterPath?: string | null;
-  movieReleaseDate?: string | null;
-  createdAt: string;
+  id: number;
+  title: string;
+  poster_path?: string | null;
+  release_date?: string | null;
+  media_type: string;
+  bookmark_id: string;
+  bookmark_created_at: string;
 };
 
 export type BookmarksResponse = {
-  bookmarks: Bookmark[];
-  total: number;
   page: number;
-  limit: number;
-  totalPages: number;
+  results: Bookmark[];
+  total_pages: number;
+  total_results: number;
 };
 
 // Fetch user bookmarks (protected)

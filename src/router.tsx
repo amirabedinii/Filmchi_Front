@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage';
 import SearchPage from './pages/SearchPage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import MovieCategoryPage from './pages/MovieCategoryPage';
+import BookmarksPage from './pages/BookmarksPage';
+import ListsPage from './pages/ListsPage';
 
 export const router = createBrowserRouter([
   {
@@ -19,13 +21,14 @@ export const router = createBrowserRouter([
       { path: 'register', element: <RegisterPage /> },
       { path: 'movies/:id', element: <MovieDetailsPage /> },
       { path: 'movies/category/:category', element: <MovieCategoryPage /> },
+      { path: 'bookmarks', element: <BookmarksPage /> },
+      { path: 'lists/:listName', element: <ListsPage /> },
       {
         path: 'protected',
         element: <ProtectedRoute />,
         children: [
           // Future protected routes will go here
           // { path: 'profile', element: <ProfilePage /> },
-          // { path: 'bookmarks', element: <BookmarksPage /> },
           // { path: 'recommendations', element: <RecommendationsPage /> }
         ]
       }
