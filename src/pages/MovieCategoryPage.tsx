@@ -47,7 +47,6 @@ export default function MovieCategoryPage() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Get all movies from API (already filtered and sorted server-side)
   const movies = query.data?.pages.flatMap((p) => p.results) ?? [];
 
   // Load more results function
@@ -125,7 +124,7 @@ export default function MovieCategoryPage() {
           ) : query.isError ? (
             t('category.error_loading')
           ) : (
-            t('category.movies_found', { count: movies.length })
+            t('category.movies_found', { count: query?.data?.pages[0]?.totalResults ?? 0 })
           )}
         </p>
 

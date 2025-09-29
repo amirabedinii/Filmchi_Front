@@ -95,6 +95,7 @@ export async function fetchCategoryWithFilters(
   return {
     page: data.page,
     totalPages: data.total_pages ?? data.totalPages,
+    totalResults: data.total_results ?? data.totalResults,
     results: data.results.map((movie: any) => ({
       id: movie.id,
       title: movie.title,
