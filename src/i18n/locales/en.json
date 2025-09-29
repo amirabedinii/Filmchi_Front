@@ -73,6 +73,36 @@
     "search_failed": "Search failed. Please try again.",
     "results_count": "{{count}} results found",
     "results_count_plural": "{{count}} results found"
+  },
+  "movie": {
+    "overview": "Overview",
+    "cast": "Cast",
+    "crew": "Crew",
+    "similar": "Similar Movies",
+    "runtime": "Runtime",
+    "release_date": "Release Date",
+    "rating": "Rating",
+    "genres": "Genres",
+    "status": "Status",
+    "budget": "Budget",
+    "revenue": "Revenue",
+    "director": "Director",
+    "producer": "Producer",
+    "bookmark": "Bookmark",
+    "unbookmark": "Remove Bookmark",
+    "rate_movie": "Rate this movie",
+    "your_rating": "Your Rating",
+    "loading": "Loading...",
+    "error": "Failed to load movie details",
+    "no_overview": "No overview available",
+    "no_cast": "No cast information available",
+    "no_similar": "No similar movies found",
+    "minutes": "min",
+    "bookmarked": "Movie bookmarked successfully",
+    "unbookmarked": "Movie removed from bookmarks",
+    "rated": "Movie rated successfully",
+    "bookmark_error": "Failed to bookmark movie",
+    "rating_error": "Failed to rate movie"
   }
 }
 

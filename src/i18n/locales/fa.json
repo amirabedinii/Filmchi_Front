@@ -73,6 +73,36 @@
     "search_failed": "جست‌وجو ناموفق بود. دوباره تلاش کنید.",
     "results_count": "{{count}} نتیجه یافت شد",
     "results_count_plural": "{{count}} نتیجه یافت شد"
+  },
+  "movie": {
+    "overview": "خلاصه",
+    "cast": "بازیگران",
+    "crew": "عوامل",
+    "similar": "فیلم‌های مشابه",
+    "runtime": "مدت زمان",
+    "release_date": "تاریخ انتشار",
+    "rating": "امتیاز",
+    "genres": "ژانرها",
+    "status": "وضعیت",
+    "budget": "بودجه",
+    "revenue": "درآمد",
+    "director": "کارگردان",
+    "producer": "تهیه‌کننده",
+    "bookmark": "نشانه‌گذاری",
+    "unbookmark": "حذف نشانه",
+    "rate_movie": "امتیاز دهید",
+    "your_rating": "امتیاز شما",
+    "loading": "در حال بارگذاری...",
+    "error": "خطا در بارگذاری جزئیات فیلم",
+    "no_overview": "خلاصه‌ای موجود نیست",
+    "no_cast": "اطلاعات بازیگران موجود نیست",
+    "no_similar": "فیلم مشابهی یافت نشد",
+    "minutes": "دقیقه",
+    "bookmarked": "فیلم با موفقیت نشانه‌گذاری شد",
+    "unbookmarked": "فیلم از نشانه‌ها حذف شد",
+    "rated": "امتیاز با موفقیت ثبت شد",
+    "bookmark_error": "خطا در نشانه‌گذاری فیلم",
+    "rating_error": "خطا در ثبت امتیاز"
   }
 }
 

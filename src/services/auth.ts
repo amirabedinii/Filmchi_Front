@@ -7,7 +7,11 @@ type RegisterPayload = { email: string; password: string };
 type AuthResponse = {
   accessToken: string;
   refreshToken: string;
-  user?: { id: string; email: string };
+  user?: { 
+    id: string; 
+    email: string;
+    createdAt?: string;
+  };
 };
 
 export async function login(payload: LoginPayload) {

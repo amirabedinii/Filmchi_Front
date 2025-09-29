@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUiStore } from '@/stores/useUiStore';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001',
@@ -13,6 +14,14 @@ api.interceptors.request.use((config) => {
     config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Auto-inject language parameter for movie-related endpoints if not provided
+  const isMovieEndpoint = config.url?.includes('/movies') || config.url?.includes('/recommendations');
+  if (isMovieEndpoint && config.params && !config.params.lang && !config.params.language) {
+    const currentLanguage = useUiStore.getState().language || 'en';
+    config.params.lang = currentLanguage;
+  }
+  
   return config;
 });
 

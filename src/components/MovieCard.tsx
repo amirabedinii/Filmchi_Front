@@ -1,9 +1,11 @@
 import { Movie } from '@/services/movies';
 import { Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = { movie: Movie };
 
 export default function MovieCard({ movie }: Props) {
+  const navigate = useNavigate();
   const img = movie.posterPath
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
     : 'https://via.placeholder.com/300x450?text=No+Image';
@@ -11,8 +13,15 @@ export default function MovieCard({ movie }: Props) {
   const year = movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : null;
   const rating = movie.voteAverage ? Math.round(movie.voteAverage * 10) / 10 : null;
 
+  const handleClick = () => {
+    navigate(`/movies/${movie.id}`);
+  };
+
   return (
-    <div className="w-32 xs:w-36 sm:w-40 md:w-44 lg:w-48 shrink-0 group cursor-pointer touch-manipulation">
+    <div 
+      onClick={handleClick}
+      className="w-32 xs:w-36 sm:w-40 md:w-44 lg:w-48 shrink-0 group cursor-pointer touch-manipulation"
+    >
       <div className="aspect-[2/3] overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 shadow-sm group-hover:shadow-lg transition-all duration-300 relative">
         <img 
           src={img} 
