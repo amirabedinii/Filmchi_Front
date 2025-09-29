@@ -131,13 +131,15 @@ export default function MovieCategoryPage() {
         {/* Movie Grid */}
         {query.isLoading ? (
           // Loading State
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="aspect-[2/3] rounded-lg bg-gray-200 dark:bg-gray-700" />
-                <div className="mt-2">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-1" />
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+              <div key={i} className="p-1">
+                <div className="animate-pulse">
+                  <div className="aspect-[2/3] rounded-lg bg-gray-200 dark:bg-gray-700" />
+                  <div className="mt-2">
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-1" />
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                  </div>
                 </div>
               </div>
             ))}
@@ -169,9 +171,13 @@ export default function MovieCategoryPage() {
         ) : (
           // Results Grid
           <div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
               {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <div key={movie.id} className="p-1">
+                  <div className="[&>*]:!w-full">
+                    <MovieCard movie={movie} />
+                  </div>
+                </div>
               ))}
             </div>
 
