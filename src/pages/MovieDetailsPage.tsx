@@ -9,9 +9,11 @@ import {
   bookmarkMovie, 
   unbookmarkMovie, 
   rateMovie,
-  type MovieDetails 
+  type MovieDetails,
+  type Movie
 } from '@/services/movies';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUiStore } from '@/stores/useUiStore';
 import { Star, Bookmark, BookmarkCheck, Calendar, Clock, DollarSign, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import HorizontalScroll from '@/components/HorizontalScroll';
@@ -23,6 +25,7 @@ export default function MovieDetailsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const language = useUiStore(s => s.language);
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
 
@@ -33,15 +36,15 @@ export default function MovieDetailsPage() {
 
   // Fetch movie details
   const { data: movie, isLoading, isError } = useQuery({
-    queryKey: ['movie', id],
-    queryFn: () => fetchMovieDetails(id),
+    queryKey: ['movie', id, language],
+    queryFn: () => fetchMovieDetails(id, language),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // Fetch similar movies
   const { data: similarMovies } = useQuery({
-    queryKey: ['movie', id, 'similar'],
-    queryFn: () => fetchSimilarMovies(id),
+    queryKey: ['movie', id, 'similar', language],
+    queryFn: () => fetchSimilarMovies(id, 1, language),
     enabled: !!movie,
     staleTime: 15 * 60 * 1000, // 15 minutes
   });
@@ -415,7 +418,7 @@ export default function MovieDetailsPage() {
         <section>
           <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{t('movie.similar')}</h2>
           <HorizontalScroll>
-            {similarMovies.results.map((movie) => (
+            {similarMovies.results.map((movie: Movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </HorizontalScroll>
