@@ -40,6 +40,7 @@
     "now_playing": "در حال اکران",
     "upcoming": "به‌زودی",
     "load_more": "بیشتر",
+    "view_all": "مشاهده همه",
     "loading": "در حال بارگذاری...",
     "failed_to_load": "خطا در بارگذاری."
   },
@@ -103,6 +104,21 @@
     "rated": "امتیاز با موفقیت ثبت شد",
     "bookmark_error": "خطا در نشانه‌گذاری فیلم",
     "rating_error": "خطا در ثبت امتیاز"
+  },
+  "category": {
+    "back": "بازگشت",
+    "back_to_home": "بازگشت به خانه",
+    "invalid_category": "دسته‌بندی نامعتبر",
+    "page_description": "مرور همه فیلم‌های {{category}}",
+    "filters": "فیلترها",
+    "clear_filters": "پاک کردن فیلترها",
+    "default_sort": "پیش‌فرض",
+    "loading_movies": "در حال بارگذاری فیلم‌ها...",
+    "error_loading": "خطا در بارگذاری فیلم‌ها",
+    "movies_found": "{{count}} فیلم یافت شد",
+    "movies_found_plural": "{{count}} فیلم یافت شد",
+    "no_movies_found": "فیلمی یافت نشد",
+    "retry": "تلاش مجدد"
   }
 }
 

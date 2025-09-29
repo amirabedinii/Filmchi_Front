@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SearchPage from './pages/SearchPage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
+import MovieCategoryPage from './pages/MovieCategoryPage';
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'movies/:id', element: <MovieDetailsPage /> },
+      { path: 'movies/category/:category', element: <MovieCategoryPage /> },
       {
         path: 'protected',
         element: <ProtectedRoute />,

@@ -33,22 +33,22 @@ export default function HorizontalScroll({ children }: { children: ReactNode }) 
 
   return (
     <div className="relative">
-      {/* Left scroll button - larger on mobile */}
+      {/* Left scroll button - hidden on desktop */}
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 sm:p-2 md:p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all touch-manipulation"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 sm:p-2 md:hidden shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all touch-manipulation"
           aria-label="Scroll left"
         >
           <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
         </button>
       )}
 
-      {/* Right scroll button - larger on mobile */}
+      {/* Right scroll button - hidden on desktop */}
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 sm:p-2 md:p-2 shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all touch-manipulation"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full p-2 sm:p-2 md:hidden shadow-lg border border-zinc-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all touch-manipulation"
           aria-label="Scroll right"
         >
           <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />

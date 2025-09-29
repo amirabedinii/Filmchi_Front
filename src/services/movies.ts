@@ -55,6 +55,61 @@ export async function fetchCategory(category: CategoryKey, page = 1, lang?: stri
   };
 }
 
+export type CategoryFilters = {
+  genre?: string;
+  year?: string;
+  sortBy?: string;
+};
+
+export async function fetchCategoryWithFilters(
+  category: CategoryKey, 
+  page = 1, 
+  filters?: CategoryFilters, 
+  lang?: string
+) {
+  const apiPath = categoryPathMap[category];
+  const currentLang = lang || useUiStore.getState().language;
+  
+  const params: Record<string, any> = {
+    page,
+    lang: currentLang,
+  };
+
+  // Add filters if provided
+  if (filters?.genre) {
+    params.genre = filters.genre;
+  }
+  if (filters?.year) {
+    params.year = filters.year;
+  }
+  if (filters?.sortBy) {
+    params.sort_by = filters.sortBy;
+  }
+
+  console.log('fetchCategoryWithFilters called with:', { category, page, filters, params });
+  const { data } = await api.get(`/movies/${apiPath}`, { params });
+  
+  console.log('API Response:', { page: data.page, totalPages: data.total_pages ?? data.totalPages, resultsCount: data.results?.length });
+  
+  // Transform snake_case API response to camelCase frontend format
+  return {
+    page: data.page,
+    totalPages: data.total_pages ?? data.totalPages,
+    results: data.results.map((movie: any) => ({
+      id: movie.id,
+      title: movie.title,
+      posterPath: movie.poster_path ?? movie.posterPath ?? null,
+      releaseDate: movie.release_date ?? movie.releaseDate ?? null,
+      voteAverage: movie.vote_average ?? movie.voteAverage ?? null,
+      overview: movie.overview,
+      genreIds: movie.genre_ids ?? movie.genreIds,
+      adult: movie.adult,
+      originalLanguage: movie.original_language ?? movie.originalLanguage,
+      popularity: movie.popularity,
+    }))
+  };
+}
+
 export type SearchFilters = {
   query: string;
   genre?: string;

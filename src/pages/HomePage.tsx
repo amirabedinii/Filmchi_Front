@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchCategory, type CategoryKey } from '@/services/movies';
 import HorizontalScroll from '@/components/HorizontalScroll';
 import MovieCard from '@/components/MovieCard';
@@ -27,6 +28,7 @@ export default function HomePage() {
 
 function CategoryRow({ category, title }: { category: CategoryKey; title: string }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const loadMoreRef = useRef<HTMLButtonElement>(null);
   
   const query = useInfiniteQuery({
@@ -58,16 +60,24 @@ function CategoryRow({ category, title }: { category: CategoryKey; title: string
     <section aria-label={title}>
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
-        {query.hasNextPage && (
+        <div className="flex gap-2">
+          {query.hasNextPage && (
+            <button
+              ref={loadMoreRef}
+              onClick={() => query.fetchNextPage()}
+              disabled={query.isFetchingNextPage}
+              className="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50 transition-colors touch-manipulation"
+            >
+              {query.isFetchingNextPage ? t('home.loading') : t('home.load_more')}
+            </button>
+          )}
           <button
-            ref={loadMoreRef}
-            onClick={() => query.fetchNextPage()}
-            disabled={query.isFetchingNextPage}
-            className="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50 transition-colors touch-manipulation"
+            onClick={() => navigate(`/movies/category/${category}`)}
+            className="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors touch-manipulation"
           >
-            {query.isFetchingNextPage ? t('home.loading') : t('home.load_more')}
+            {t('home.view_all')}
           </button>
-        )}
+        </div>
       </div>
       
       {query.isLoading ? (

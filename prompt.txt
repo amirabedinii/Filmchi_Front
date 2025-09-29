@@ -52,27 +52,37 @@ Build the app in small, incremental phases. For each phase, generate the code, e
    - Debounce search input.
    - Tests: Vitest for search query params, filter updates, debouncing, result rendering. Playwright: Type in search, apply filters in en/fa, scroll results, check responsive layouts, screenshot results grid, verify no overlaps or console warnings.
 
-5. **Movie Details Page**
+5. **Movie Category Pages**
+   - Routes: /movies/category/:category (e.g., /movies/category/trending, /movies/category/popular, /movies/category/top-rated, /movies/category/now-playing, /movies/category/upcoming)
+   - Dedicated pages for each movie category with translated page titles and breadcrumbs
+   - Grid layout with infinite scroll pagination (GET /movies/{category}?page=...)
+   - Filter options: year range, genre multiselect, sort by (popularity, rating, release date)
+   - "بیشتر" (More) buttons on home page should navigate to these category pages
+   - Responsive grid: 1 column on mobile, 2 on tablet, 3-4 on desktop
+   - Skeleton loaders during fetch, error states with retry
+   - Tests: Vitest for category page rendering, filter functionality, infinite scroll, navigation from home. Playwright: Navigate from home "بیشتر" buttons, test filters in en/fa, scroll for infinite load, resize for responsive grid, screenshot category pages, check RTL layout, console errors.
+
+6. **Movie Details Page**
    - Route: /movies/:tmdbId
    - Fetch GET /movies/:tmdbId (details like title, overview, cast, genres), display hero section (backdrop, poster, info), similar movies (GET /movies/:tmdbId/similar), translated labels.
    - If authenticated: Show bookmark status (GET /movies/:tmdbId/bookmark-status), toggle bookmark (POST /movies/:tmdbId/bookmark or unbookmark).
    - Rating: POST /movies/:tmdbId/rating (e.g., star rating component).
    - Tests: Vitest for detail fetching, conditional auth UI, bookmark/rating mutations. Playwright: Navigate to movie page, interact with bookmark/rate, switch languages, resize for mobile (check hero adaptation), screenshot details, test keyboard for rating, console checks.
 
-6. **Bookmarks and User Lists**
+7. **Bookmarks and User Lists**
    - Dedicated /bookmarks page: GET /movies/bookmarks?page=...&limit=..., translated.
    - Grid view of bookmarked movies.
    - Custom lists: e.g., /lists/:listName (GET /lists/:listName?...), add/remove (POST/DELETE /lists/:listName/...).
    - UI for creating/managing lists (Dialog for add movie), translated.
    - Tests: Vitest for list fetching, add/remove mutations, pagination. Playwright: Navigate to bookmarks, add/remove items, switch languages (RTL grids), resize, screenshot lists, interact with dialogs, accessibility tests.
 
-7. **Recommendations**
+8. **Recommendations**
    - Page: /recommendations
    - Form to input query (POST /recommendations {query: "..."}), translated.
    - Display recommended movies in a list/grid.
    - Tests: Vitest for form submission, result rendering. Playwright: Submit query in en/fa, view results, check responsive, screenshot, console errors.
 
-8. **User Profile and Settings**
+9. **User Profile and Settings**
    - Page: /profile
    - Fetch GET /users/profile, display editable form (PUT /users/profile), translated.
    - Stats: GET /users/stats (e.g., movies watched, ratings).
@@ -83,14 +93,14 @@ Build the app in small, incremental phases. For each phase, generate the code, e
    - Delete account: DELETE /users/account (confirm dialog).
    - Tests: Vitest for profile fetch/update, form validations, delete confirmation. Playwright: Edit profile in en/fa, toggle theme/language, screenshot forms, test responsiveness, keyboard nav for delete dialog.
 
-9. **Polish and Optimizations**
-   - Add dark/light mode toggle (integrate with user preferences).
-   - Responsive testing: Ensure mobile nav (hamburger menu), touch-friendly.
-   - Performance: Memoize components, optimize images (lazy load posters).
-   - Error boundaries, 404 page, translated.
-   - Tests: Vitest e2e-like navigation flows, theme switching. Playwright: Full app navigation in both languages, resize multiple viewports, check animations/transitions, accessibility audit (e.g., tab through app), screenshots for design review per design-review-agent.md.
+10. **Polish and Optimizations**
+    - Add dark/light mode toggle (integrate with user preferences).
+    - Responsive testing: Ensure mobile nav (hamburger menu), touch-friendly.
+    - Performance: Memoize components, optimize images (lazy load posters).
+    - Error boundaries, 404 page, translated.
+    - Tests: Vitest e2e-like navigation flows, theme switching. Playwright: Full app navigation in both languages, resize multiple viewports, check animations/transitions, accessibility audit (e.g., tab through app), screenshots for design review per design-review-agent.md.
 
-10. **Full Testing and Documentation**
+11. **Full Testing and Documentation**
     - Run all Vitest tests, aim for 80%+ coverage.
     - Use Playwright for comprehensive e2e: Test full flows (auth -> search -> details -> bookmark), bilingual, responsive, following design-review-agent.md phases.
     - Write README: Setup (yarn install, yarn dev), env setup, i18n, API assumptions, running Playwright tests.

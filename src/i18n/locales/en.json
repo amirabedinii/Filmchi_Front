@@ -40,6 +40,7 @@
     "now_playing": "Now Playing",
     "upcoming": "Upcoming",
     "load_more": "Load more",
+    "view_all": "View All",
     "loading": "Loading...",
     "failed_to_load": "Failed to load."
   },
@@ -103,6 +104,21 @@
     "rated": "Movie rated successfully",
     "bookmark_error": "Failed to bookmark movie",
     "rating_error": "Failed to rate movie"
+  },
+  "category": {
+    "back": "Back",
+    "back_to_home": "Back to Home",
+    "invalid_category": "Invalid Category",
+    "page_description": "Browse all {{category}} movies",
+    "filters": "Filters",
+    "clear_filters": "Clear Filters",
+    "default_sort": "Default",
+    "loading_movies": "Loading movies...",
+    "error_loading": "Error loading movies",
+    "movies_found": "{{count}} movies found",
+    "movies_found_plural": "{{count}} movies found",
+    "no_movies_found": "No movies found",
+    "retry": "Retry"
   }
 }
 
