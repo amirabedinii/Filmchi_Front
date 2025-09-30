@@ -90,6 +90,7 @@ export default function AppLayout() {
                     <NavLink to="/lists/watched" className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">{t('lists.watched')}</NavLink>
                   </div>
                 </div>
+                <NavLink to="/recommendations" className={({ isActive }) => `hidden lg:inline ${isActive ? 'font-medium' : ''}`}>{t('app.recommendations')}</NavLink>
                 <button
                   onClick={async () => {
                     await logoutReq();

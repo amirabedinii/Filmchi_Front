@@ -11,7 +11,8 @@
     "login": "Login",
     "register": "Register",
     "home": "Home",
-    "lists": "Lists"
+    "lists": "Lists",
+    "recommendations": "AI Recommendations"
   }
   ,
   "auth": {
@@ -172,6 +173,32 @@
       "title_asc": "Title A-Z", 
       "title_desc": "Title Z-A"
     }
+  },
+  "recommendations": {
+    "title": "AI Recommendations",
+    "description": "Get personalized movie recommendations powered by AI",
+    "back": "Back",
+    "back_to_home": "Back to Home",
+    "query_label": "What kind of movies are you looking for?",
+    "query_placeholder": "e.g., sci-fi movies with time travel, action movies like John Wick",
+    "get_recommendations": "Get Recommendations",
+    "getting_recommendations": "Getting recommendations...",
+    "success": "Recommendations loaded successfully",
+    "error": "Failed to get recommendations",
+    "error_description": "There was an error getting your recommendations. Please try again.",
+    "retry": "Try Again",
+    "no_results": "No recommendations found",
+    "no_results_description": "Try a different query to get movie recommendations.",
+    "results_title": "Recommended Movies",
+    "reason_label": "Why this movie:",
+    "year_label": "Year:",
+    "query_required": "Please enter a query to get recommendations.",
+    "examples_title": "Example queries:",
+    "example_1": "Sci-fi movies with time travel",
+    "example_2": "Action movies like John Wick",
+    "example_3": "Romantic comedies from the 90s",
+    "example_4": "Psychological thrillers with plot twists",
+    "login_required": "Please login to get AI recommendations"
   }
 }
 
