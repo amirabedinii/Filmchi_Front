@@ -93,14 +93,21 @@ describe('ListsPage', () => {
 
     // Mock successful list fetch
     const { getList } = await import('../services/lists');
-    (getList as any).mockResolvedValue([
-      {
-        tmdbId: 603,
-        title: 'The Matrix',
-        posterPath: '/poster.jpg',
-        addedAt: '2024-01-01T00:00:00Z',
-      },
-    ]);
+    (getList as any).mockResolvedValue({
+      items: [
+        {
+          id: 'b30cfc0a-cc1c-4e76-abbe-7356c08939be',
+          tmdbId: 603,
+          title: 'The Matrix',
+          posterPath: '/poster.jpg',
+          addedAt: '2024-01-01T00:00:00Z',
+        },
+      ],
+      total: 1,
+      page: 1,
+      limit: 20,
+      totalPages: 1,
+    });
 
     render(
       <TestWrapper>
@@ -121,7 +128,13 @@ describe('ListsPage', () => {
 
     // Mock empty list
     const { getList } = await import('../services/lists');
-    (getList as any).mockResolvedValue([]);
+    (getList as any).mockResolvedValue({
+      items: [],
+      total: 0,
+      page: 1,
+      limit: 20,
+      totalPages: 0,
+    });
 
     render(
       <TestWrapper>
@@ -167,7 +180,13 @@ describe('ListsPage', () => {
 
     // Mock empty list
     const { getList } = await import('../services/lists');
-    (getList as any).mockResolvedValue([]);
+    (getList as any).mockResolvedValue({
+      items: [],
+      total: 0,
+      page: 1,
+      limit: 20,
+      totalPages: 0,
+    });
 
     render(
       <TestWrapper>
@@ -201,7 +220,13 @@ describe('ListsPage', () => {
 
     // Mock empty list
     const { getList } = await import('../services/lists');
-    (getList as any).mockResolvedValue([]);
+    (getList as any).mockResolvedValue({
+      items: [],
+      total: 0,
+      page: 1,
+      limit: 20,
+      totalPages: 0,
+    });
 
     // Mock search results
     const { searchMovies } = await import('../services/movies');

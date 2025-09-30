@@ -326,34 +326,7 @@
               "path": ["movies", "{{tmdbId}}", "bookmark"]
             }
           },
-          "response": [
-            {
-              "name": "Bookmark Movie Success",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {"key": "Content-Type", "value": "application/json"}
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"title\": \"The Matrix\",\n  \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n  \"releaseDate\": \"1999-03-30\"\n}"
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/movies/603/bookmark",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "603", "bookmark"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {"key": "Content-Type", "value": "application/json"}
-              ],
-              "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Movie bookmarked successfully\",\n  \"bookmark\": {\n    \"id\": \"bookmark_123\",\n    \"tmdbId\": 603,\n    \"movieTitle\": \"The Matrix\",\n    \"moviePosterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n    \"movieReleaseDate\": \"1999-03-30\",\n    \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n  }\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "POST /movies/:tmdbId/unbookmark (Protected)",
@@ -372,34 +345,7 @@
               "path": ["movies", "{{tmdbId}}", "unbookmark"]
             }
           },
-          "response": [
-            {
-              "name": "Unbookmark Movie Success",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {"key": "Content-Type", "value": "application/json"}
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/movies/603/unbookmark",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "603", "unbookmark"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {"key": "Content-Type", "value": "application/json"}
-              ],
-              "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Movie unbookmarked successfully\"\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "GET /movies/bookmarks (Protected)",
@@ -439,7 +385,7 @@
                 {"key": "Content-Type", "value": "application/json"}
               ],
               "cookie": [],
-              "body": "{\n  \"bookmarks\": [\n    {\n      \"id\": \"bookmark_1\",\n      \"tmdbId\": 603,\n      \"movieTitle\": \"The Matrix\",\n      \"moviePosterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n      \"movieReleaseDate\": \"1999-03-30\",\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    {\n      \"id\": \"bookmark_2\",\n      \"tmdbId\": 550,\n      \"movieTitle\": \"Fight Club\",\n      \"moviePosterPath\": \"/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg\",\n      \"movieReleaseDate\": \"1999-10-15\",\n      \"createdAt\": \"2024-01-14T15:20:00.000Z\"\n    }\n  ],\n  \"total\": 2,\n  \"page\": 1,\n  \"limit\": 20,\n  \"totalPages\": 1\n}"
+              "body": "{\n  \"page\": 1,\n  \"results\": [\n    {\n      \"id\": 603,\n      \"title\": \"The Matrix\",\n      \"poster_path\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n      \"release_date\": \"1999-03-30\",\n      \"media_type\": \"movie\",\n      \"bookmark_id\": \"bookmark_1\",\n      \"bookmark_created_at\": \"2024-01-15T10:30:00.000Z\"\n    },\n    {\n      \"id\": 550,\n      \"title\": \"Fight Club\",\n      \"poster_path\": \"/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg\",\n      \"release_date\": \"1999-10-15\",\n      \"media_type\": \"movie\",\n      \"bookmark_id\": \"bookmark_2\",\n      \"bookmark_created_at\": \"2024-01-14T15:20:00.000Z\"\n    }\n  ],\n  \"total_pages\": 1,\n  \"total_results\": 2\n}"
             }
           ]
         },
@@ -454,48 +400,7 @@
               "path": ["movies", "{{tmdbId}}", "bookmark-status"]
             }
           },
-          "response": [
-            {
-              "name": "Bookmark Status - Bookmarked",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/movies/603/bookmark-status",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "603", "bookmark-status"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {"key": "Content-Type", "value": "application/json"}
-              ],
-              "cookie": [],
-              "body": "{\n  \"isBookmarked\": true,\n  \"bookmarkId\": \"bookmark_1\"\n}"
-            },
-            {
-              "name": "Bookmark Status - Not Bookmarked",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/movies/123/bookmark-status",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "123", "bookmark-status"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {"key": "Content-Type", "value": "application/json"}
-              ],
-              "cookie": [],
-              "body": "{\n  \"isBookmarked\": false,\n  \"bookmarkId\": null\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "POST /movies/:tmdbId/rating (Protected)",
@@ -696,7 +601,7 @@
                 {"key": "Content-Type", "value": "application/json"}
               ],
               "cookie": [],
-              "body": "[\n  {\n    \"tmdbId\": 603,\n    \"title\": \"The Matrix\",\n    \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n    \"addedAt\": \"2024-01-15T10:30:00.000Z\"\n  },\n  {\n    \"tmdbId\": 550,\n    \"title\": \"Fight Club\",\n    \"posterPath\": \"/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg\",\n    \"addedAt\": \"2024-01-14T15:20:00.000Z\"\n  }\n]"
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"b30cfc0a-cc1c-4e76-abbe-7356c08939be\",\n      \"tmdbId\": 603,\n      \"title\": \"The Matrix\",\n      \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n      \"addedAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    {\n      \"id\": \"b929dfe6-868a-421f-8a32-5ca1f1f5faff\",\n      \"tmdbId\": 550,\n      \"title\": \"Fight Club\",\n      \"posterPath\": \"/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg\",\n      \"addedAt\": \"2024-01-14T15:20:00.000Z\"\n    }\n  ],\n  \"total\": 2,\n  \"page\": 1,\n  \"limit\": 50,\n  \"totalPages\": 1\n}"
             }
           ]
         },
@@ -709,7 +614,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"tmdbId\": {{tmdbId}},\n  \"title\": \"The Matrix\"\n}"
+              "raw": "{\n  \"tmdbId\": {{tmdbId}},\n  \"title\": \"The Matrix\",\n  \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/lists/{{listName}}",
@@ -717,7 +622,34 @@
               "path": ["lists", "{{listName}}"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "Add Movie to List",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tmdbId\": 603,\n  \"title\": \"The Matrix\",\n  \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/lists/watchlist",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["lists", "watchlist"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": \"b30cfc0a-cc1c-4e76-abbe-7356c08939be\",\n  \"tmdbId\": 603,\n  \"title\": \"The Matrix\",\n  \"posterPath\": \"/f89q3dFQbQ5XxHh4XJeH2hFgLD0.jpg\",\n  \"addedAt\": \"2024-01-15T10:30:00.000Z\"\n}"
+            }
+          ]
         },
         {
           "name": "DELETE /lists/:listName/:tmdbId",
@@ -738,7 +670,7 @@
       "name": "Recommendations (Protected)",
       "item": [
         {
-          "name": "POST /recommendations",
+          "name": "POST /recommendations (Basic - with Iranian filter)",
           "request": {
             "method": "POST",
             "header": [
@@ -746,7 +678,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"sci-fi movies with time travel\",\n  \"language\": \"{{language}}\"\n}"
+              "raw": "{\n  \"query\": \"action movies\",\n  \"language\": \"{{language}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/recommendations",
@@ -806,6 +738,98 @@
               ],
               "cookie": [],
               "body": "[\n  {\n    \"title\": \"Back to the Future\",\n    \"year\": 1985,\n    \"reason\": \"Classic time travel movie with a teenager going back to the 1950s\",\n    \"tmdbId\": 105,\n    \"posterPath\": \"/fNOH9f1aA7XRTzl1sAOx9iF553Q.jpg\",\n    \"overview\": \"Eighties teenager Marty McFly is accidentally sent back in time to 1955.\"\n  },\n  {\n    \"title\": \"Groundhog Day\",\n    \"year\": 1993,\n    \"reason\": \"Time loop movie where the protagonist relives the same day\",\n    \"tmdbId\": 137,\n    \"posterPath\": \"/gyudd8k9QdP9ES9sAPaq7wcLJUe.jpg\",\n    \"overview\": \"A narcissistic TV weatherman finds himself stuck in a time loop.\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST /recommendations (Custom Content Filter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"comedy movies\",\n  \"language\": \"{{language}}\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"PG\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [18, 27, 53],\n    \"excludeKeywords\": [\"violence\", \"blood\", \"death\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Custom Filtered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"comedy movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"PG\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [18, 27, 53],\n    \"excludeKeywords\": [\"violence\", \"blood\", \"death\"]\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"توی استودیو\",\n    \"year\": 2008,\n    \"reason\": \"فیلم کمدی خانوادگی مناسب برای همه سنین\",\n    \"tmdbId\": 10515,\n    \"posterPath\": \"/example_poster.jpg\",\n    \"overview\": \"داستان کمدی درباره گروهی از دوستان که در استودیو فیلم کار می‌کنند.\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST /recommendations (No Content Filter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"all movies\",\n  \"language\": \"{{language}}\",\n  \"contentFilter\": {\n    \"includeAdult\": true,\n    \"maxCertification\": \"NC-17\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unfiltered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"all movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": true,\n    \"maxCertification\": \"NC-17\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"فیلم نمونه\",\n    \"year\": 2023,\n    \"reason\": \"فیلم با محتوای بزرگسالان\",\n    \"tmdbId\": 12345,\n    \"posterPath\": \"/example_poster.jpg\",\n    \"overview\": \"داستان فیلم با محتوای مناسب برای بزرگسالان.\"\n  }\n]"
             }
           ]
         }
@@ -1030,6 +1054,195 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "Content Filtering Examples",
+      "item": [
+        {
+          "name": "POST /recommendations (Iranian Filter - Default)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"action movies\",\n  \"language\": \"fa\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Iranian Filtered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"action movies\",\n  \"language\": \"fa\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"10 Things I Hate About You\",\n    \"year\": 1999,\n    \"reason\": \"فیلم کمدی رمانتیک کلاسیک دهه 90 با رتبه PG-13\",\n    \"tmdbId\": 4951,\n    \"posterPath\": \"/ujERk3aKABXU3NDXOAxEQYTHe9A.jpg\",\n    \"overview\": \"این فیلم برگرفته شده از یکی از نمایشنامه‌های شکسپیر می باشد که به شکل مدرن و در میان دانش آموزان دبیرستانی به اجرا در می آید.\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST /recommendations (Strict Family Filter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"family movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"G\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [18, 27, 53, 80],\n    \"excludeKeywords\": [\"violence\", \"death\", \"blood\", \"sex\", \"nude\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Strict Family Filtered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"family movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"G\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [18, 27, 53, 80],\n    \"excludeKeywords\": [\"violence\", \"death\", \"blood\", \"sex\", \"nude\"]\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"یخ‌زده\",\n    \"year\": 2013,\n    \"reason\": \"انیمیشن خانوادگی مناسب برای همه سنین\",\n    \"tmdbId\": 109445,\n    \"posterPath\": \"/jIjdFXKUNtdz1m4f3QnPD6nFnWV.jpg\",\n    \"overview\": \"داستان دو خواهر که در سفری جادویی برای نجات پادشاهی خود شرکت می‌کنند.\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST /recommendations (Teen Filter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"teen movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"PG-13\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [27, 80],\n    \"excludeKeywords\": [\"sex\", \"nude\", \"explicit\", \"adult\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Teen Filtered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"teen movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": false,\n    \"maxCertification\": \"PG-13\",\n    \"certificationCountry\": \"US\",\n    \"excludeGenres\": [27, 80],\n    \"excludeKeywords\": [\"sex\", \"nude\", \"explicit\", \"adult\"]\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"دبیرستان موزیکال\",\n    \"year\": 2006,\n    \"reason\": \"فیلم موزیکال مناسب برای نوجوانان\",\n    \"tmdbId\": 11423,\n    \"posterPath\": \"/example_poster.jpg\",\n    \"overview\": \"داستان دانش‌آموزان دبیرستان که در مسابقه موزیکال شرکت می‌کنند.\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST /recommendations (No Filter - All Content)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"drama movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": true,\n    \"maxCertification\": \"NC-17\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recommendations",
+              "host": ["{{baseUrl}}"],
+              "path": ["recommendations"]
+            }
+          },
+          "response": [
+            {
+              "name": "Unfiltered Recommendations",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"drama movies\",\n  \"language\": \"fa\",\n  \"contentFilter\": {\n    \"includeAdult\": true,\n    \"maxCertification\": \"NC-17\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/recommendations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["recommendations"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"title\": \"فیلم درام نمونه\",\n    \"year\": 2023,\n    \"reason\": \"فیلم درام با محتوای بزرگسالان\",\n    \"tmdbId\": 12345,\n    \"posterPath\": \"/example_poster.jpg\",\n    \"overview\": \"داستان درام با محتوای مناسب برای بزرگسالان.\"\n  }\n]"
+            }
+          ]
         }
       ]
     }

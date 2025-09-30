@@ -66,19 +66,20 @@ export default function ListsPage() {
     queryFn: ({ pageParam = 1 }) => getList(listName, pageParam, 20, sortBy),
     initialPageParam: 1,
     getNextPageParam: (last, pages) => {
-      // Since the API returns an array, we need to estimate pagination
-      if (last.length < 20) return undefined;
-      return pages.length + 1;
+      // Use the totalPages from the API response
+      if (last.page >= last.totalPages) return undefined;
+      return last.page + 1;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: isAuthenticated,
   });
 
-  const listItems = query.data?.pages.flatMap((p) => p) ?? [];
+  const listItems = query.data?.pages.flatMap((p) => p.items) ?? [];
+  const totalCount = query.data?.pages[0]?.total ?? 0;
 
   // Add to list mutation
   const addMutation = useMutation({
-    mutationFn: (movie: { tmdbId: number; title: string }) => 
+    mutationFn: (movie: { tmdbId: number; title: string; posterPath?: string | null }) => 
       addToList(listName!, movie),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['list', listName] });
@@ -242,7 +243,11 @@ export default function ListsPage() {
                         <div
                           key={movie.id}
                           className="flex items-center gap-3 p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
-                          onClick={() => addMutation.mutate({ tmdbId: movie.id, title: movie.title })}
+                          onClick={() => addMutation.mutate({ 
+                            tmdbId: movie.id, 
+                            title: movie.title, 
+                            posterPath: movie.posterPath 
+                          })}
                         >
                           <img
                             src={movie.posterPath ? `https://image.tmdb.org/t/p/w92${movie.posterPath}` : '/placeholder-poster.jpg'}
@@ -281,7 +286,7 @@ export default function ListsPage() {
           ) : query.isError ? (
             t('lists.error_loading')
           ) : (
-            t('lists.total_count', { count: listItems.length })
+            t('lists.total_count', { count: totalCount })
           )}
         </p>
 
@@ -338,7 +343,7 @@ export default function ListsPage() {
           <div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
               {listItems.map((item) => (
-                <div key={`${item.tmdbId}-${item.addedAt}`} className="p-1 relative group">
+                <div key={item.id} className="p-1 relative group">
                   <div className="[&>*]:!w-full">
                     <MovieCard 
                       movie={{
