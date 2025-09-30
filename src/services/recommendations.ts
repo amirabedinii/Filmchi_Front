@@ -19,6 +19,8 @@ export async function getRecommendations(request: RecommendationRequest) {
   const { data } = await api.post('/recommendations', {
     query: request.query,
     language: request.language || 'en'
+  }, {
+    timeout: 120000 // 120 seconds timeout for recommendations
   });
   return data as Recommendation[];
 }

@@ -138,7 +138,7 @@ export default function RecommendationsPage() {
 
       {/* Loading State */}
       {mutation.isPending && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 lg:gap-6">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="animate-pulse">
               <div className="aspect-[2/3] rounded-lg bg-gray-200 dark:bg-gray-700" />
@@ -183,7 +183,7 @@ export default function RecommendationsPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 lg:gap-6">
             {recommendations.map((rec) => (
               <div key={rec.tmdbId} className="space-y-3">
                 <MovieCard
