@@ -165,7 +165,7 @@ export default function ListsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="space-y-4">
+      <div className="space-y-4 w-full ">
         {/* Back Button */}
         <button
           onClick={() => navigate('/')}
@@ -176,7 +176,7 @@ export default function ListsPage() {
         </button>
         
         {/* Title Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full flex-col sm:flex-row gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">{getListIcon(listName)}</span>
@@ -246,7 +246,7 @@ export default function ListsPage() {
                           onClick={() => addMutation.mutate({ 
                             tmdbId: movie.id, 
                             title: movie.title, 
-                            posterPath: movie.posterPath 
+                            posterPath: movie.posterPath || null
                           })}
                         >
                           <img

@@ -91,16 +91,28 @@ export default function AppLayout() {
                   </div>
                 </div>
                 <NavLink to="/recommendations" className={({ isActive }) => `hidden lg:inline ${isActive ? 'font-medium' : ''}`}>{t('app.recommendations')}</NavLink>
-                <button
-                  onClick={async () => {
-                    await logoutReq();
-                    toast.success(t('auth.logout'));
-                    navigate('/');
-                  }}
-                  className="text-xs sm:text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded px-1.5 sm:px-2 py-1"
-                >
-                  {t('auth.logout')}
-                </button>
+                <div className="relative group hidden sm:inline">
+                  <button className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400">
+                    {t('app.profile')} ▾
+                  </button>
+                  <div className="absolute top-full mt-1 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 min-w-32 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <NavLink to="/profile" className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">{t('profile.title')}</NavLink>
+                    {/* TODO: Uncomment when SettingsPage is ready to be used */}
+                    {/* <NavLink to="/settings" className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">{t('settings.title')}</NavLink> */}
+                    <NavLink to="/account" className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">{t('account.title')}</NavLink>
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                    <button
+                      onClick={async () => {
+                        await logoutReq();
+                        toast.success(t('auth.logout'));
+                        navigate('/');
+                      }}
+                      className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 dark:text-red-400"
+                    >
+                      {t('auth.logout')}
+                    </button>
+                  </div>
+                </div>
               </>
             )}
             <select
