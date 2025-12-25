@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   fetchMovieDetails, 
   fetchSimilarMovies, 
@@ -78,6 +78,13 @@ export default function MovieDetailsPage() {
     }
   });
 
+  // Initialize userRating from movie data when available
+  useEffect(() => {
+    if (movie?.userRating !== undefined && movie.userRating !== null) {
+      setUserRating(movie.userRating);
+    }
+  }, [movie?.userRating]);
+
   // Rating mutation
   const ratingMutation = useMutation({
     mutationFn: (rating: number) => rateMovie(id, rating),
@@ -92,7 +99,7 @@ export default function MovieDetailsPage() {
 
   const handleRating = (rating: number) => {
     if (!isAuthenticated) {
-      toast.error('Please login to rate movies');
+      toast.error(t('movie.login_to_rate'));
       return;
     }
     setUserRating(rating);
@@ -304,29 +311,32 @@ export default function MovieDetailsPage() {
                   </button>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{t('movie.rate_movie')}:</span>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => handleRating(star * 2)}
-                          onMouseEnter={() => setHoveredRating(star * 2)}
-                          onMouseLeave={() => setHoveredRating(0)}
-                          className="transition-colors"
-                        >
-                          <Star
-                            className={`w-5 h-5 ${
-                              (hoveredRating || userRating) >= star * 2
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : backdropUrl
-                                ? 'text-white/60 hover:text-white'
-                                : 'text-gray-400 hover:text-gray-600'
-                            }`}
-                          />
-                        </button>
-                      ))}
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{t('movie.rate_movie')}:</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => handleRating(star)}
+                            onMouseEnter={() => setHoveredRating(star)}
+                            onMouseLeave={() => setHoveredRating(0)}
+                            className="transition-colors"
+                          >
+                            <Star
+                              className={`w-5 h-5 ${
+                                (hoveredRating || userRating) >= star
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : backdropUrl
+                                  ? 'text-white/60 hover:text-white'
+                                  : 'text-gray-400 hover:text-gray-600'
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
                     </div>
+                    
                   </div>
                 </div>
               )}

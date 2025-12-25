@@ -107,7 +107,8 @@
     "unbookmarked": "Movie removed from bookmarks",
     "rated": "Movie rated successfully",
     "bookmark_error": "Failed to bookmark movie",
-    "rating_error": "Failed to rate movie"
+    "rating_error": "Failed to rate movie",
+    "login_to_rate": "Please login to rate movies"
   },
   "category": {
     "back": "Back",
