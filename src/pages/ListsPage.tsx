@@ -7,7 +7,6 @@ import MovieCard from '@/components/MovieCard';
 import { ArrowLeft, X, Plus, List, Settings, Search, SortAsc } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-hot-toast';
@@ -206,10 +205,10 @@ export default function ListsPage() {
             {/* Add Movie Dialog */}
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="inline-flex items-center gap-2">
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                   <Plus className="w-4 h-4" />
                   {t('lists.add_movie')}
-                </Button>
+                </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
@@ -333,10 +332,13 @@ export default function ListsPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {t('lists.empty_description')}
             </p>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
+            <button
+              onClick={() => setIsAddDialogOpen(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
               {t('lists.add_first_movie')}
-            </Button>
+            </button>
           </div>
         ) : (
           // Results Grid

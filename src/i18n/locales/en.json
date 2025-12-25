@@ -79,6 +79,7 @@
     "results_count_plural": "{{count}} results found"
   },
   "movie": {
+    "back": "Back",
     "overview": "Overview",
     "cast": "Cast",
     "crew": "Crew",

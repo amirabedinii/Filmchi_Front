@@ -191,13 +191,17 @@ export default function MovieDetailsPage() {
   return (
     <div className="space-y-8">
       {/* Back button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
+      <div className={language === 'fa' ? 'flex justify-end' : ''}>
+        <button
+          onClick={() => navigate(-1)}
+          className={`flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors ${
+            language === 'fa' ? 'flex-row-reverse' : ''
+          }`}
+        >
+          <ArrowLeft className={`w-4 h-4 ${language === 'fa' ? 'rotate-180' : ''}`} />
+          {t('movie.back')}
+        </button>
+      </div>
 
       {/* Hero Section */}
       <div className="relative">

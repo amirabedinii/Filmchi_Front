@@ -185,18 +185,20 @@ export default function RecommendationsPage() {
           
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 lg:gap-6">
             {recommendations.map((rec) => (
-              <div key={rec.tmdbId} className="space-y-3">
-                <MovieCard
-                  movie={{
-                    id: rec.tmdbId,
-                    title: rec.title,
-                    posterPath: rec.posterPath || null,
-                    releaseDate: rec.year.toString(),
-                    voteAverage: 0,
-                    overview: rec.overview,
-                  }}
-                />
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
+              <div key={rec.tmdbId} className="space-y-3 w-full flex flex-col">
+                <div className="w-full [&>*]:!w-full">
+                  <MovieCard
+                    movie={{
+                      id: rec.tmdbId,
+                      title: rec.title,
+                      posterPath: rec.posterPath || null,
+                      releaseDate: rec.year.toString(),
+                      voteAverage: 0,
+                      overview: rec.overview,
+                    }}
+                  />
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2 w-full flex-shrink-0">
                   <p className="text-xs font-semibold text-blue-900 dark:text-blue-100">
                     {t('recommendations.reason_label')}
                   </p>
