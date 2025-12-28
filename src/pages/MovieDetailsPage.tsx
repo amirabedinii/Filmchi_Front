@@ -140,7 +140,7 @@ export default function MovieDetailsPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent rounded-lg" />
           <div className="absolute bottom-6 left-6 right-6">
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="w-48 aspect-[2/3] bg-gray-300 dark:bg-gray-600 animate-pulse rounded-lg" />
+              <div className="hidden lg:block w-48 aspect-[2/3] bg-gray-300 dark:bg-gray-600 animate-pulse rounded-lg" />
               <div className="flex-1 space-y-4">
                 <div className="h-8 bg-gray-300 dark:bg-gray-600 animate-pulse rounded w-3/4" />
                 <div className="h-4 bg-gray-300 dark:bg-gray-600 animate-pulse rounded w-1/2" />
@@ -226,7 +226,7 @@ export default function MovieDetailsPage() {
         <div className={`${backdropUrl ? 'absolute bottom-6 left-6 right-6' : ''}`}>
           <div className="flex flex-col md:flex-row gap-6">
             {/* Poster */}
-            <div className="w-48 shrink-0">
+            <div className="hidden lg:block w-48 shrink-0">
               <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-xl">
                 <img
                   src={posterUrl}
