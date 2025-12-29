@@ -55,7 +55,7 @@ export default function AppLayout() {
     <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 w-full overflow-x-hidden">
       <header className="border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-40 bg-white dark:bg-zinc-900">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3 md:gap-4 w-full">
-          <Link to="/" className="font-semibold text-sm sm:text-base lg:text-lg shrink-0 whitespace-nowrap">{t('app.title')}</Link>
+          <Link to="/" className="font-semibold text-sm sm:text-base lg:text-lg shrink-0 whitespace-nowrap h-full flex items-center">{t('app.title')}</Link>
           <form onSubmit={handleSearch} className="flex-1 max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4">
             <div className="relative">
               <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -72,10 +72,10 @@ export default function AppLayout() {
           <nav className="flex items-center gap-1 sm:gap-1.5 md:gap-2 lg:gap-4 text-xs sm:text-sm shrink-0">
             <NavLink to="/" className={({ isActive }) => `hidden md:inline ${isActive ? 'font-medium' : ''}`}>{t('app.home')}</NavLink>
             {!isAuthenticated && (
-              <>
-                <NavLink to="/login" className={({ isActive }) => `whitespace-nowrap ${isActive ? 'font-medium' : ''}`}>{t('app.login')}</NavLink>
-                <NavLink to="/register" className={({ isActive }) => `hidden sm:inline whitespace-nowrap ${isActive ? 'font-medium' : ''}`}>{t('app.register')}</NavLink>
-              </>
+              <div className="flex items-center h-full gap-1 sm:gap-1.5 md:gap-2 lg:gap-4 sm:flex-row flex-1 sm:flex-initial justify-center sm:justify-start">
+                <NavLink to="/login" className={({ isActive }) => `hidden sm:inline whitespace-nowrap j ${isActive ? 'font-medium' : ''}`}>{t('app.login')}</NavLink>
+                <NavLink to="/register" className={({ isActive }) => `whitespace-nowrap h-full flex items-center ${isActive ? 'font-medium' : ''}`}>{t('app.register')}</NavLink>
+              </div>
             )}
             {isAuthenticated && (
               <>
