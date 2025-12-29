@@ -18,6 +18,7 @@ import { Star, Bookmark, BookmarkCheck, Calendar, Clock, DollarSign, ArrowLeft }
 import toast from 'react-hot-toast';
 import HorizontalScroll from '@/components/HorizontalScroll';
 import MovieCard from '@/components/MovieCard';
+import { formatNumber, translateStatus } from '@/lib/utils';
 
 export default function MovieDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -107,20 +108,21 @@ export default function MovieDetailsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    const formatted = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0
     }).format(amount);
+    return formatNumber(formatted, language);
   };
 
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours > 0) {
-      return `${hours}h ${mins}${t('movie.minutes')}`;
+      return `${formatNumber(hours, language)}h ${formatNumber(mins, language)}${t('movie.minutes')}`;
     }
-    return `${mins} ${t('movie.minutes')}`;
+    return `${formatNumber(mins, language)} ${t('movie.minutes')}`;
   };
 
   const getDirectors = (movie: MovieDetails) => {
@@ -252,7 +254,7 @@ export default function MovieDetailsPage() {
                 {year && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    <span>{year}</span>
+                    <span>{formatNumber(year, language)}</span>
                   </div>
                 )}
                 {movie.runtime && (
@@ -264,7 +266,7 @@ export default function MovieDetailsPage() {
                 {rating && (
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span>{rating}/10</span>
+                    <span>{formatNumber(rating, language)}/{formatNumber(10, language)}</span>
                   </div>
                 )}
               </div>
@@ -390,7 +392,9 @@ export default function MovieDetailsPage() {
         {movie.status && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">{t('movie.status')}</h3>
-            <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">{movie.status}</p>
+            <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+              {translateStatus(movie.status, t)}
+            </p>
           </div>
         )}
       </section>

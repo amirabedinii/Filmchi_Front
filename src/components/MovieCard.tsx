@@ -1,11 +1,14 @@
 import { Movie } from '@/services/movies';
 import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useUiStore } from '@/stores/useUiStore';
+import { formatNumber } from '@/lib/utils';
 
 type Props = { movie: Movie };
 
 export default function MovieCard({ movie }: Props) {
   const navigate = useNavigate();
+  const language = useUiStore(s => s.language);
   const img = movie.posterPath
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
     : 'https://via.placeholder.com/300x450?text=No+Image';
@@ -32,7 +35,7 @@ export default function MovieCard({ movie }: Props) {
         {rating && (
           <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-1">
             <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-yellow-400" />
-            <span className="text-xs">{rating}</span>
+            <span className="text-xs">{formatNumber(rating, language)}</span>
           </div>
         )}
       </div>
@@ -44,13 +47,8 @@ export default function MovieCard({ movie }: Props) {
           {movie.title}
         </div>
         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-          {year && <span>{year}</span>}
-          {rating && (
-            <div className="flex items-center gap-1 sm:hidden">
-              <Star className="w-2.5 h-2.5 fill-yellow-400" />
-              <span>{rating}</span>
-            </div>
-          )}
+          {year && <span>{formatNumber(year, language)}</span>}
+         
         </div>
       </div>
     </div>

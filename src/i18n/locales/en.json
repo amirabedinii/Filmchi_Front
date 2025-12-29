@@ -108,7 +108,15 @@
     "rated": "Movie rated successfully",
     "bookmark_error": "Failed to bookmark movie",
     "rating_error": "Failed to rate movie",
-    "login_to_rate": "Please login to rate movies"
+    "login_to_rate": "Please login to rate movies",
+    "statuses": {
+      "Released": "Released",
+      "Post Production": "Post Production",
+      "In Production": "In Production",
+      "Planned": "Planned",
+      "Rumored": "Rumored",
+      "Canceled": "Canceled"
+    }
   },
   "category": {
     "back": "Back",
