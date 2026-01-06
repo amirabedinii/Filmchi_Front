@@ -225,8 +225,8 @@ export default function MovieDetailsPage() {
           </div>
         )}
         
-        <div className={`${backdropUrl ? 'absolute bottom-6 left-6 right-6' : ''}`}>
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className={`${backdropUrl ? 'absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 md:bottom-6 md:left-6 md:right-6' : ''}`}>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Poster */}
             <div className="hidden lg:block w-48 shrink-0">
               <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-xl">
@@ -239,33 +239,33 @@ export default function MovieDetailsPage() {
             </div>
 
             {/* Movie Info */}
-            <div className={`flex-1 space-y-4 ${backdropUrl ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>
+            <div className={`flex-1 space-y-2 sm:space-y-3 md:space-y-4 ${backdropUrl ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{movie.title}</h1>
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{movie.title}</h1>
                 {movie.tagline && (
-                  <p className={`text-lg italic ${backdropUrl ? 'text-gray-200' : 'text-gray-600 dark:text-gray-400'}`}>
+                  <p className={`text-sm sm:text-base md:text-lg italic ${backdropUrl ? 'text-gray-200' : 'text-gray-600 dark:text-gray-400'}`}>
                     "{movie.tagline}"
                   </p>
                 )}
               </div>
 
               {/* Meta info */}
-              <div className="flex flex-wrap items-center gap-4 text-sm">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
                 {year && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>{formatNumber(year, language)}</span>
                   </div>
                 )}
                 {movie.runtime && (
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>{formatRuntime(movie.runtime)}</span>
                   </div>
                 )}
                 {rating && (
                   <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
                     <span>{formatNumber(rating, language)}/{formatNumber(10, language)}</span>
                   </div>
                 )}
@@ -273,11 +273,11 @@ export default function MovieDetailsPage() {
 
               {/* Genres */}
               {movie.genres && movie.genres.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {movie.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className={`px-3 py-1 rounded-full text-sm ${
+                      className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm ${
                         backdropUrl 
                           ? 'bg-white/20 text-white border border-white/30' 
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
@@ -291,12 +291,12 @@ export default function MovieDetailsPage() {
 
               {/* Actions (for authenticated users) */}
               {isAuthenticated && (
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 md:gap-4">
                   {/* Bookmark button */}
                   <button
                     onClick={() => bookmarkMutation.mutate()}
                     disabled={bookmarkMutation.isPending}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm ${
                       bookmarkStatus?.isBookmarked
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : backdropUrl
@@ -305,18 +305,18 @@ export default function MovieDetailsPage() {
                     }`}
                   >
                     {bookmarkStatus?.isBookmarked ? (
-                      <BookmarkCheck className="w-4 h-4" />
+                      <BookmarkCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     ) : (
-                      <Bookmark className="w-4 h-4" />
+                      <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     )}
                     {bookmarkStatus?.isBookmarked ? t('movie.unbookmark') : t('movie.bookmark')}
                   </button>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{t('movie.rate_movie')}:</span>
-                      <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-sm">{t('movie.rate_movie')}:</span>
+                      <div className="flex items-center gap-0.5 sm:gap-1">
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
                           <button
                             key={star}
@@ -326,7 +326,7 @@ export default function MovieDetailsPage() {
                             className="transition-colors"
                           >
                             <Star
-                              className={`w-5 h-5 ${
+                              className={`w-4 h-4 sm:w-5 sm:h-5 ${
                                 (hoveredRating || userRating) >= star
                                   ? 'fill-yellow-400 text-yellow-400'
                                   : backdropUrl
@@ -345,7 +345,7 @@ export default function MovieDetailsPage() {
 
               {/* Directors */}
               {directors.length > 0 && (
-                <div>
+                <div className="text-sm sm:text-base">
                   <span className="font-medium">{t('movie.director')}: </span>
                   <span>{directors.map(d => d.name).join(', ')}</span>
                 </div>
@@ -365,7 +365,7 @@ export default function MovieDetailsPage() {
 
       {/* Additional Details */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {movie.budget && movie.budget > 0 && (
+        {movie.budget !== undefined && movie.budget !== null && movie.budget > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-5 h-5 text-green-600" />
@@ -377,7 +377,7 @@ export default function MovieDetailsPage() {
           </div>
         )}
 
-        {movie.revenue && movie.revenue > 0 && (
+        {movie.revenue !== undefined && movie.revenue !== null && movie.revenue > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-5 h-5 text-blue-600" />

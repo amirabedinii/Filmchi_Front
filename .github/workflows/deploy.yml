@@ -1,0 +1,151 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      # - main
+      - dev
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/ashpaz-yar
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: runner
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create .env.production file
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          BASE_URL=${{ secrets.PROD_BASE_URL || 'http://127.0.0.1:8000/api' }}
+          NEXT_PUBLIC_USE_AUTH_MOCK=false
+          ${{ secrets.PROD_ENV_VARS || '' }}
+          EOF
+
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: "docker-compose.prod.yml,.env.production,nginx.conf"
+          target: "${{ secrets.VPS_DEPLOY_PATH || '/var/www/ashpaz-yar' }}"
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            
+            DEPLOY_PATH="${{ secrets.VPS_DEPLOY_PATH || '/var/www/ashpaz-yar' }}"
+            
+            # Create directory if it doesn't exist
+            mkdir -p $DEPLOY_PATH
+            cd $DEPLOY_PATH
+            
+            # Ensure docker-compose.prod.yml exists
+            if [ ! -f docker-compose.prod.yml ]; then
+              echo "Error: docker-compose.prod.yml not found in $DEPLOY_PATH"
+              exit 1
+            fi
+            
+            # Ensure nginx.conf exists
+            if [ ! -f nginx.conf ]; then
+              echo "Error: nginx.conf not found in $DEPLOY_PATH"
+              exit 1
+            fi
+            
+            # Ensure .env.production exists
+            if [ ! -f .env.production ]; then
+              echo "Warning: .env.production not found. Creating from template..."
+              cat > .env.production << EOF
+            NODE_ENV=production
+            BASE_URL=http://127.0.0.1:8000/api
+            NEXT_PUBLIC_USE_AUTH_MOCK=false
+            EOF
+            fi
+            
+            # Login to GitHub Container Registry
+            echo ${{ secrets.VPS_GH_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+            
+            # Determine image tag based on branch (use lowercase)
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              export IMAGE_TAG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            else
+              export IMAGE_TAG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+            fi
+            
+            # Pull latest Docker image
+            docker pull $IMAGE_TAG || {
+              echo "Warning: Failed to pull image $IMAGE_TAG, continuing with existing image..."
+            }
+            
+            # Stop and remove old containers
+            docker compose -f docker-compose.prod.yml down || true
+            
+            # Start new containers with image from registry
+            IMAGE_TAG=$IMAGE_TAG docker compose -f docker-compose.prod.yml up -d
+            
+            # Clean up old images
+            docker image prune -f
+            
+            # Health check with retries (check nginx on port 80)
+            echo "Waiting for service to start..."
+            for i in {1..30}; do
+              if curl -f http://localhost/health > /dev/null 2>&1 || curl -f http://localhost > /dev/null 2>&1; then
+                echo "Health check passed!"
+                exit 0
+              fi
+              echo "Attempt $i/30: Service not ready yet, waiting..."
+              sleep 2
+            done
+            
+            echo "Health check failed after 60 seconds"
+            docker compose -f docker-compose.prod.yml logs
+            exit 1
+
