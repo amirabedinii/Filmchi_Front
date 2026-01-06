@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
@@ -165,13 +164,15 @@ describe('ListsPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Failed to load list')).toBeInTheDocument();
+      // Use getAllByText since "Failed to load list" appears twice in the DOM
+      const errorMessages = screen.getAllByText('Failed to load list');
+      expect(errorMessages.length).toBeGreaterThan(0);
       expect(screen.getByText('Try Again')).toBeInTheDocument();
     });
   });
 
   it('opens add movie dialog when add button is clicked', async () => {
-    const user = userEvent.setup();
+    // Using fireEvent instead of userEvent
     
     // Mock authenticated state
     (useAuthStore as any).mockReturnValue({
@@ -201,7 +202,7 @@ describe('ListsPage', () => {
 
     // Click the add first movie button
     const addButton = screen.getByText('Add Your First Movie');
-    await user.click(addButton);
+    fireEvent.click(addButton);
 
     // Dialog should open
     await waitFor(() => {
@@ -211,7 +212,7 @@ describe('ListsPage', () => {
   });
 
   it('searches for movies when typing in search input', async () => {
-    const user = userEvent.setup();
+    // Using fireEvent instead of userEvent
     
     // Mock authenticated state
     (useAuthStore as any).mockReturnValue({
@@ -253,11 +254,11 @@ describe('ListsPage', () => {
     });
 
     const addButton = screen.getByText('Add Your First Movie');
-    await user.click(addButton);
+    fireEvent.click(addButton);
 
     // Type in search input
     const searchInput = screen.getByPlaceholderText('Search movies...');
-    await user.type(searchInput, 'Matrix');
+    fireEvent.change(searchInput, { target: { value: 'Matrix' } });
 
     // Should search for movies (with debounce)
     await waitFor(() => {

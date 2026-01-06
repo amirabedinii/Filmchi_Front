@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import MovieDetailsPage from '@/pages/MovieDetailsPage';
+import * as moviesService from '@/services/movies';
 import '@testing-library/jest-dom';
 
 // Mock the services
@@ -27,6 +28,17 @@ vi.mock('react-hot-toast', () => ({
   },
 }));
 
+// Mock react-router-dom
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useParams: () => ({ id: '603' }), // Mock the movie ID
+  };
+});
+
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -35,6 +47,25 @@ vi.mock('react-i18next', () => ({
       changeLanguage: vi.fn(),
     },
   }),
+}));
+
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  Star: () => <div>Star</div>,
+  Bookmark: () => <div>Bookmark</div>,
+  BookmarkCheck: () => <div>BookmarkCheck</div>,
+  Calendar: () => <div>Calendar</div>,
+  Clock: () => <div>Clock</div>,
+  DollarSign: () => <div>DollarSign</div>,
+  ArrowLeft: () => <div>ArrowLeft</div>,
+}));
+
+// Mock useUiStore
+vi.mock('@/stores/useUiStore', () => ({
+  useUiStore: (selector: any) => {
+    const state = { language: 'en', theme: 'light' };
+    return selector(state);
+  },
 }));
 
 const mockMovie = {
@@ -92,7 +123,7 @@ const createWrapper = () => {
 describe('MovieDetailsPage', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    
+
     // Mock auth store default state
     vi.mocked(useAuthStore).mockReturnValue({
       isAuthenticated: false,
@@ -105,18 +136,19 @@ describe('MovieDetailsPage', () => {
   });
 
   it('shows loading state initially', () => {
-    const { fetchMovieDetails } = require('@/services/movies');
-    fetchMovieDetails.mockImplementation(() => new Promise(() => {})); // Never resolves
+    vi.mocked(moviesService.fetchMovieDetails).mockImplementation(() => new Promise(() => { })); // Never resolves
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
-    expect(screen.getByTestId('loading-skeleton') || screen.getByText(/Loading/i)).toBeInTheDocument();
+    // Check for loading skeleton (animate-pulse class) or loading text
+    const skeleton = document.querySelector('.animate-pulse');
+    const loadingText = screen.queryByText(/Loading/i);
+    expect(skeleton || loadingText).toBeTruthy();
   });
 
   it('displays movie details when loaded', async () => {
-    const { fetchMovieDetails, fetchSimilarMovies } = require('@/services/movies');
-    fetchMovieDetails.mockResolvedValue(mockMovie);
-    fetchSimilarMovies.mockResolvedValue({ results: [] });
+    vi.mocked(moviesService.fetchMovieDetails).mockResolvedValue(mockMovie);
+    vi.mocked(moviesService.fetchSimilarMovies).mockResolvedValue({ results: [], page: 1, totalPages: 1 });
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
@@ -140,10 +172,9 @@ describe('MovieDetailsPage', () => {
       setUser: vi.fn(),
     });
 
-    const { fetchMovieDetails, fetchSimilarMovies, fetchBookmarkStatus } = require('@/services/movies');
-    fetchMovieDetails.mockResolvedValue(mockMovie);
-    fetchSimilarMovies.mockResolvedValue({ results: [] });
-    fetchBookmarkStatus.mockResolvedValue({ isBookmarked: false });
+    vi.mocked(moviesService.fetchMovieDetails).mockResolvedValue(mockMovie);
+    vi.mocked(moviesService.fetchSimilarMovies).mockResolvedValue({ results: [], page: 1, totalPages: 1 });
+    vi.mocked(moviesService.fetchBookmarkStatus).mockResolvedValue({ isBookmarked: false });
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
@@ -156,9 +187,8 @@ describe('MovieDetailsPage', () => {
   });
 
   it('displays cast members', async () => {
-    const { fetchMovieDetails, fetchSimilarMovies } = require('@/services/movies');
-    fetchMovieDetails.mockResolvedValue(mockMovie);
-    fetchSimilarMovies.mockResolvedValue({ results: [] });
+    vi.mocked(moviesService.fetchMovieDetails).mockResolvedValue(mockMovie);
+    vi.mocked(moviesService.fetchSimilarMovies).mockResolvedValue({ results: [], page: 1, totalPages: 1 });
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
@@ -172,9 +202,8 @@ describe('MovieDetailsPage', () => {
   });
 
   it('displays director information', async () => {
-    const { fetchMovieDetails, fetchSimilarMovies } = require('@/services/movies');
-    fetchMovieDetails.mockResolvedValue(mockMovie);
-    fetchSimilarMovies.mockResolvedValue({ results: [] });
+    vi.mocked(moviesService.fetchMovieDetails).mockResolvedValue(mockMovie);
+    vi.mocked(moviesService.fetchSimilarMovies).mockResolvedValue({ results: [], page: 1, totalPages: 1 });
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
@@ -187,8 +216,7 @@ describe('MovieDetailsPage', () => {
   });
 
   it('handles error state gracefully', async () => {
-    const { fetchMovieDetails } = require('@/services/movies');
-    fetchMovieDetails.mockRejectedValue(new Error('Failed to fetch'));
+    vi.mocked(moviesService.fetchMovieDetails).mockRejectedValue(new Error('Failed to fetch'));
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
@@ -201,6 +229,8 @@ describe('MovieDetailsPage', () => {
 
   it('shows similar movies when available', async () => {
     const similarMovies = {
+      page: 1,
+      totalPages: 1,
       results: [
         {
           id: 604,
@@ -212,17 +242,19 @@ describe('MovieDetailsPage', () => {
       ],
     };
 
-    const { fetchMovieDetails, fetchSimilarMovies } = require('@/services/movies');
-    fetchMovieDetails.mockResolvedValue(mockMovie);
-    fetchSimilarMovies.mockResolvedValue(similarMovies);
+    vi.mocked(moviesService.fetchMovieDetails).mockResolvedValue(mockMovie);
+    vi.mocked(moviesService.fetchSimilarMovies).mockResolvedValue(similarMovies);
 
     render(<MovieDetailsPage />, { wrapper: createWrapper() });
 
+    // Wait for both movie and similar movies to load
     await waitFor(() => {
       expect(screen.getByText('The Matrix')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('movie.similar')).toBeInTheDocument();
-    expect(screen.getByText('The Matrix Reloaded')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('movie.similar')).toBeInTheDocument();
+      expect(screen.getByText('The Matrix Reloaded')).toBeInTheDocument();
+    });
   });
 });

@@ -17,6 +17,14 @@ vi.mock('../stores/useAuthStore', () => ({
   useAuthStore: vi.fn(),
 }));
 
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  ArrowLeft: () => <div>ArrowLeft</div>,
+  X: () => <div>X</div>,
+  Bookmark: () => <div>Bookmark</div>,
+  Star: () => <div>Star</div>,
+}));
+
 // Mock react-router-dom hooks
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
@@ -78,20 +86,20 @@ describe('BookmarksPage', () => {
     // Mock successful bookmarks fetch
     const { fetchBookmarks } = await import('../services/movies');
     (fetchBookmarks as any).mockResolvedValue({
-      bookmarks: [
+      page: 1,
+      results: [
         {
-          id: '1',
-          tmdbId: 603,
-          movieTitle: 'The Matrix',
-          moviePosterPath: '/poster.jpg',
-          movieReleaseDate: '1999-03-30',
-          createdAt: '2024-01-01T00:00:00Z',
+          id: 603,
+          title: 'The Matrix',
+          poster_path: '/poster.jpg',
+          release_date: '1999-03-30',
+          media_type: 'movie',
+          bookmark_id: '1',
+          bookmark_created_at: '2024-01-01T00:00:00Z',
         },
       ],
-      total: 1,
-      page: 1,
-      limit: 20,
-      totalPages: 1,
+      total_pages: 1,
+      total_results: 1,
     });
 
     render(
@@ -114,11 +122,10 @@ describe('BookmarksPage', () => {
     // Mock empty bookmarks
     const { fetchBookmarks } = await import('../services/movies');
     (fetchBookmarks as any).mockResolvedValue({
-      bookmarks: [],
-      total: 0,
       page: 1,
-      limit: 20,
-      totalPages: 0,
+      results: [],
+      total_pages: 0,
+      total_results: 0,
     });
 
     render(
@@ -150,7 +157,9 @@ describe('BookmarksPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Failed to load bookmarks')).toBeInTheDocument();
+      // There are multiple elements with this text, so use getAllByText
+      const errorTexts = screen.getAllByText('Failed to load bookmarks');
+      expect(errorTexts.length).toBeGreaterThan(0);
       expect(screen.getByText('Try Again')).toBeInTheDocument();
     });
   });
