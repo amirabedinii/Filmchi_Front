@@ -540,7 +540,8 @@ describe('Search Integration with AppLayout', () => {
   it('navigates to search page when typing in navbar search', async () => {
     const { router } = renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    const searchInput = screen.getByPlaceholderText('Search movies...');
+    // Wait for i18n and layout to render the navbar search input
+    const searchInput = await screen.findByPlaceholderText('Search movies...', { timeout: 2000 });
     
     fireEvent.change(searchInput, { target: { value: 'Matrix' } });
     
@@ -553,7 +554,7 @@ describe('Search Integration with AppLayout', () => {
   it('submits search form from navbar', async () => {
     const { router } = renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    const searchInput = screen.getByPlaceholderText('Search movies...');
+    const searchInput = await screen.findByPlaceholderText('Search movies...', { timeout: 2000 });
     const searchForm = searchInput.closest('form');
     
     // Set the search query value
@@ -580,8 +581,8 @@ describe('Search Integration with AppLayout', () => {
   it('handles empty search gracefully', async () => {
     const { router } = renderWithProviders(<div />, { initialEntries: ['/'] });
     
-    const searchForm = screen.getByPlaceholderText('Search movies...').closest('form');
-    const searchInput = screen.getByPlaceholderText('Search movies...');
+    const searchInput = await screen.findByPlaceholderText('Search movies...', { timeout: 2000 });
+    const searchForm = searchInput.closest('form');
     
     // Try to submit empty search
     fireEvent.change(searchInput, { target: { value: '' } });

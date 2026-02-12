@@ -1,6 +1,9 @@
+import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n';
 import AppLayout from '@/shared/AppLayout';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
@@ -8,7 +11,6 @@ import RegisterPage from '@/pages/RegisterPage';
 import MovieDetailsPage from '@/pages/MovieDetailsPage';
 import { vi } from 'vitest';
 import * as moviesService from '@/services/movies';
-import '../i18n';
 
 // Mock movie services
 vi.mock('@/services/movies', () => ({
@@ -65,37 +67,35 @@ const routes = [
   }
 ];
 
+function renderWithProviders(ui: React.ReactElement) {
+  const qc = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={qc}>
+      <I18nextProvider i18n={i18n}>
+        {ui}
+      </I18nextProvider>
+    </QueryClientProvider>
+  );
+}
+
 describe('Routing', () => {
   it('renders Home at /', () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/'] });
-    const qc = new QueryClient();
-    render(
-      <QueryClientProvider client={qc}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RouterProvider router={router} />);
     expect(screen.getByRole('heading', { name: /Filmchi|فیل.?مچی/i })).toBeInTheDocument();
   });
 
   it('renders Login at /login', () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/login'] });
-    const qc = new QueryClient();
-    render(
-      <QueryClientProvider client={qc}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RouterProvider router={router} />);
     expect(screen.getByRole('heading', { name: /Login|ورود/i })).toBeInTheDocument();
   });
 
   it('renders Register at /register', () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/register'] });
-    const qc = new QueryClient();
-    render(
-      <QueryClientProvider client={qc}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RouterProvider router={router} />);
     expect(screen.getByRole('heading', { name: /Register|ثبت‌نام/i })).toBeInTheDocument();
   });
 
@@ -119,17 +119,7 @@ describe('Routing', () => {
     vi.mocked(moviesService.fetchBookmarkStatus).mockResolvedValue({ isBookmarked: false });
 
     const router = createMemoryRouter(routes, { initialEntries: ['/movies/1'] });
-    const qc = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-      },
-    });
-    
-    render(
-      <QueryClientProvider client={qc}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    );
+    renderWithProviders(<RouterProvider router={router} />);
     
     // Wait for the movie to load
     await waitFor(() => {
