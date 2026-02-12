@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useUiStore } from '@/stores/useUiStore';
 
 export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const language = useUiStore((s) => s.language);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -120,7 +122,7 @@ export default function ProfilePage() {
             className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
             aria-label={t('profile.back')}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className={`w-5 h-5 ${language === 'fa' ? 'rotate-180' : ''}`} />
           </button>
           <div>
             <h1 className="text-2xl font-bold">{t('profile.title')}</h1>

@@ -16,10 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useUiStore } from '@/stores/useUiStore';
 
 export default function AccountPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const language = useUiStore((s) => s.language);
   const [isSavingPrivacy, setIsSavingPrivacy] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -92,7 +94,7 @@ export default function AccountPage() {
           className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
           aria-label={t('account.back')}
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className={`w-5 h-5 ${language === 'fa' ? 'rotate-180' : ''}`} />
         </button>
         <div>
           <h1 className="text-2xl font-bold">{t('account.title')}</h1>

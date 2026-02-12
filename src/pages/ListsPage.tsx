@@ -6,6 +6,7 @@ import { getList, addToList, removeFromList, type ListSortOption } from '@/servi
 import MovieCard from '@/components/MovieCard';
 import { ArrowLeft, X, Plus, List, Settings, Search, SortAsc } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUiStore } from '@/stores/useUiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +26,7 @@ export default function ListsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const language = useUiStore((s) => s.language);
   const queryClient = useQueryClient();
   
   const [sortBy, setSortBy] = useState<ListSortOption>('addedAt:desc');
@@ -165,14 +167,17 @@ export default function ListsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-4 w-full ">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('lists.back')}
-        </button>
+        {/* Back Button — RTL: button on right, arrow on right of text pointing right */}
+        <div className={language === 'fa' ? 'flex justify-start' : ''}>
+          <button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
+            aria-label={t('lists.back')}
+          >
+            <ArrowLeft className={`w-4 h-4 shrink-0 ${language === 'fa' ? 'rotate-180' : ''}`} />
+            {t('lists.back')}
+          </button>
+        </div>
         
         {/* Title Section */}
         <div className="flex items-center justify-between w-full flex-col sm:flex-row gap-4">

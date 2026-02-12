@@ -199,15 +199,15 @@ export default function MovieDetailsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Back button */}
-      <div className={language === 'fa' ? 'flex justify-end' : ''}>
+      {/* Back button — in RTL (Persian): button on right, arrow on right of text pointing right */}
+      <div className={language === 'fa' ? 'flex justify-start' : ''}>
         <button
           onClick={() => navigate(-1)}
-          className={`flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors ${
-            language === 'fa' ? 'flex-row-reverse' : ''
-          }`}
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+          aria-label={t('movie.back')}
         >
-          <ArrowLeft className={`w-4 h-4 ${language === 'fa' ? 'rotate-180' : ''}`} />
+          {/* In RTL, DOM order Arrow then text → arrow appears on right (start), points right */}
+          <ArrowLeft className={`w-4 h-4 shrink-0 ${language === 'fa' ? 'rotate-180' : ''}`} />
           {t('movie.back')}
         </button>
       </div>
