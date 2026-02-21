@@ -40,7 +40,7 @@ export default function SearchPage() {
   // Save search to history
   const saveToHistory = (searchQuery: string) => {
     if (!searchQuery.trim()) return;
-    
+
     const newHistory = [searchQuery, ...searchHistory.filter(h => h !== searchQuery)].slice(0, 10);
     setSearchHistory(newHistory);
     localStorage.setItem('filmchi-search-history', JSON.stringify(newHistory));
@@ -53,9 +53,9 @@ export default function SearchPage() {
   };
 
   // Fetch genres for filter dropdown
-  const { data: genres = [] } = useQuery({
+  const { data: genres = [] } = useQuery<Genre[]>({
     queryKey: ['genres'],
-    queryFn: fetchGenres,
+    queryFn: () => fetchGenres(),
     staleTime: 30 * 60 * 1000, // 30 minutes
   });
 
@@ -80,7 +80,7 @@ export default function SearchPage() {
   });
 
   const movies = searchQuery.data?.pages.flatMap(p => p.results) ?? [];
-  const totalResults = searchQuery.data?.pages[0]?.totalPages ? 
+  const totalResults = searchQuery.data?.pages[0]?.totalPages ?
     searchQuery.data.pages[0].totalPages * 20 : 0; // Assuming 20 results per page
 
   // Handle search form submission
@@ -122,7 +122,7 @@ export default function SearchPage() {
     setLocalRating('');
     setLocalSortBy('popularity');
     setLocalSortOrder('desc');
-    
+
     const newParams = new URLSearchParams();
     if (query) newParams.set('q', query);
     setSearchParams(newParams);
@@ -165,7 +165,7 @@ export default function SearchPage() {
             </p>
           )}
         </div>
-        
+
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"

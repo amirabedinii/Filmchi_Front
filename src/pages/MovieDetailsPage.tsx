@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   fetchMovieDetails, 
   fetchSimilarMovies, 
@@ -18,6 +18,7 @@ import { Star, Bookmark, BookmarkCheck, Calendar, Clock, DollarSign, ArrowLeft }
 import toast from 'react-hot-toast';
 import HorizontalScroll from '@/components/HorizontalScroll';
 import MovieCard from '@/components/MovieCard';
+import { formatNumber, translateStatus } from '@/lib/utils';
 
 export default function MovieDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -78,6 +79,13 @@ export default function MovieDetailsPage() {
     }
   });
 
+  // Initialize userRating from movie data when available
+  useEffect(() => {
+    if (movie?.userRating !== undefined && movie.userRating !== null) {
+      setUserRating(movie.userRating);
+    }
+  }, [movie?.userRating]);
+
   // Rating mutation
   const ratingMutation = useMutation({
     mutationFn: (rating: number) => rateMovie(id, rating),
@@ -92,7 +100,7 @@ export default function MovieDetailsPage() {
 
   const handleRating = (rating: number) => {
     if (!isAuthenticated) {
-      toast.error('Please login to rate movies');
+      toast.error(t('movie.login_to_rate'));
       return;
     }
     setUserRating(rating);
@@ -100,20 +108,21 @@ export default function MovieDetailsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    const formatted = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0
     }).format(amount);
+    return formatNumber(formatted, language);
   };
 
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours > 0) {
-      return `${hours}h ${mins}${t('movie.minutes')}`;
+      return `${formatNumber(hours, language)}h ${formatNumber(mins, language)}${t('movie.minutes')}`;
     }
-    return `${mins} ${t('movie.minutes')}`;
+    return `${formatNumber(mins, language)} ${t('movie.minutes')}`;
   };
 
   const getDirectors = (movie: MovieDetails) => {
@@ -133,7 +142,7 @@ export default function MovieDetailsPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent rounded-lg" />
           <div className="absolute bottom-6 left-6 right-6">
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="w-48 aspect-[2/3] bg-gray-300 dark:bg-gray-600 animate-pulse rounded-lg" />
+              <div className="hidden lg:block w-48 aspect-[2/3] bg-gray-300 dark:bg-gray-600 animate-pulse rounded-lg" />
               <div className="flex-1 space-y-4">
                 <div className="h-8 bg-gray-300 dark:bg-gray-600 animate-pulse rounded w-3/4" />
                 <div className="h-4 bg-gray-300 dark:bg-gray-600 animate-pulse rounded w-1/2" />
@@ -190,14 +199,18 @@ export default function MovieDetailsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Back button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
+      {/* Back button — in RTL (Persian): button on right, arrow on right of text pointing right */}
+      <div className={language === 'fa' ? 'flex justify-start' : ''}>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+          aria-label={t('movie.back')}
+        >
+          {/* In RTL, DOM order Arrow then text → arrow appears on right (start), points right */}
+          <ArrowLeft className={`w-4 h-4 shrink-0 ${language === 'fa' ? 'rotate-180' : ''}`} />
+          {t('movie.back')}
+        </button>
+      </div>
 
       {/* Hero Section */}
       <div className="relative">
@@ -212,10 +225,10 @@ export default function MovieDetailsPage() {
           </div>
         )}
         
-        <div className={`${backdropUrl ? 'absolute bottom-6 left-6 right-6' : ''}`}>
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className={`${backdropUrl ? 'absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 md:bottom-6 md:left-6 md:right-6' : ''}`}>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Poster */}
-            <div className="w-48 shrink-0">
+            <div className="hidden lg:block w-48 shrink-0">
               <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-xl">
                 <img
                   src={posterUrl}
@@ -226,45 +239,45 @@ export default function MovieDetailsPage() {
             </div>
 
             {/* Movie Info */}
-            <div className={`flex-1 space-y-4 ${backdropUrl ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>
+            <div className={`flex-1 space-y-2 sm:space-y-3 md:space-y-4 ${backdropUrl ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{movie.title}</h1>
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{movie.title}</h1>
                 {movie.tagline && (
-                  <p className={`text-lg italic ${backdropUrl ? 'text-gray-200' : 'text-gray-600 dark:text-gray-400'}`}>
+                  <p className={`text-sm sm:text-base md:text-lg italic ${backdropUrl ? 'text-gray-200' : 'text-gray-600 dark:text-gray-400'}`}>
                     "{movie.tagline}"
                   </p>
                 )}
               </div>
 
               {/* Meta info */}
-              <div className="flex flex-wrap items-center gap-4 text-sm">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
                 {year && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{year}</span>
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span>{formatNumber(year, language)}</span>
                   </div>
                 )}
                 {movie.runtime && (
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>{formatRuntime(movie.runtime)}</span>
                   </div>
                 )}
                 {rating && (
                   <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span>{rating}/10</span>
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                    <span>{formatNumber(rating, language)}/{formatNumber(10, language)}</span>
                   </div>
                 )}
               </div>
 
               {/* Genres */}
               {movie.genres && movie.genres.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {movie.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className={`px-3 py-1 rounded-full text-sm ${
+                      className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm ${
                         backdropUrl 
                           ? 'bg-white/20 text-white border border-white/30' 
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
@@ -278,12 +291,12 @@ export default function MovieDetailsPage() {
 
               {/* Actions (for authenticated users) */}
               {isAuthenticated && (
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 md:gap-4">
                   {/* Bookmark button */}
                   <button
                     onClick={() => bookmarkMutation.mutate()}
                     disabled={bookmarkMutation.isPending}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm ${
                       bookmarkStatus?.isBookmarked
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : backdropUrl
@@ -292,44 +305,47 @@ export default function MovieDetailsPage() {
                     }`}
                   >
                     {bookmarkStatus?.isBookmarked ? (
-                      <BookmarkCheck className="w-4 h-4" />
+                      <BookmarkCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     ) : (
-                      <Bookmark className="w-4 h-4" />
+                      <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     )}
                     {bookmarkStatus?.isBookmarked ? t('movie.unbookmark') : t('movie.bookmark')}
                   </button>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{t('movie.rate_movie')}:</span>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => handleRating(star * 2)}
-                          onMouseEnter={() => setHoveredRating(star * 2)}
-                          onMouseLeave={() => setHoveredRating(0)}
-                          className="transition-colors"
-                        >
-                          <Star
-                            className={`w-5 h-5 ${
-                              (hoveredRating || userRating) >= star * 2
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : backdropUrl
-                                ? 'text-white/60 hover:text-white'
-                                : 'text-gray-400 hover:text-gray-600'
-                            }`}
-                          />
-                        </button>
-                      ))}
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-sm">{t('movie.rate_movie')}:</span>
+                      <div className="flex items-center gap-0.5 sm:gap-1">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => handleRating(star)}
+                            onMouseEnter={() => setHoveredRating(star)}
+                            onMouseLeave={() => setHoveredRating(0)}
+                            className="transition-colors"
+                          >
+                            <Star
+                              className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                                (hoveredRating || userRating) >= star
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : backdropUrl
+                                  ? 'text-white/60 hover:text-white'
+                                  : 'text-gray-400 hover:text-gray-600'
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
                     </div>
+                    
                   </div>
                 </div>
               )}
 
               {/* Directors */}
               {directors.length > 0 && (
-                <div>
+                <div className="text-sm sm:text-base">
                   <span className="font-medium">{t('movie.director')}: </span>
                   <span>{directors.map(d => d.name).join(', ')}</span>
                 </div>
@@ -349,7 +365,7 @@ export default function MovieDetailsPage() {
 
       {/* Additional Details */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {movie.budget && movie.budget > 0 && (
+        {movie.budget !== undefined && movie.budget !== null && movie.budget > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-5 h-5 text-green-600" />
@@ -361,7 +377,7 @@ export default function MovieDetailsPage() {
           </div>
         )}
 
-        {movie.revenue && movie.revenue > 0 && (
+        {movie.revenue !== undefined && movie.revenue !== null && movie.revenue > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-5 h-5 text-blue-600" />
@@ -376,7 +392,9 @@ export default function MovieDetailsPage() {
         {movie.status && (
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">{t('movie.status')}</h3>
-            <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">{movie.status}</p>
+            <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+              {translateStatus(movie.status, t)}
+            </p>
           </div>
         )}
       </section>

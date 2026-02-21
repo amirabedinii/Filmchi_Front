@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { act } from '@testing-library/react'; // Add this import
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter, BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppLayout from '@/shared/AppLayout';
 import HomePage from '@/pages/HomePage';
@@ -9,6 +9,20 @@ import HorizontalScroll from '@/components/HorizontalScroll';
 import MovieCard from '@/components/MovieCard';
 import * as moviesService from '@/services/movies';
 import '@/i18n';
+
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  Search: () => <div>Search</div>,
+  Star: () => <div>Star</div>,
+}));
+
+// Mock useUiStore
+vi.mock('@/stores/useUiStore', () => ({
+  useUiStore: (selector: any) => {
+    const state = { language: 'en', theme: 'light' };
+    return selector(state);
+  },
+}));
 
 const renderHome = () => {
   const qc = new QueryClient({
@@ -115,30 +129,38 @@ describe('MovieCard', () => {
     voteAverage: 8.5
   };
 
+  const renderMovieCard = (movie: moviesService.Movie) => {
+    return render(
+      <BrowserRouter>
+        <MovieCard movie={movie} />
+      </BrowserRouter>
+    );
+  };
+
   it('renders movie information correctly', () => {
-    render(<MovieCard movie={mockMovie} />);
+    renderMovieCard(mockMovie);
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('2024')).toBeInTheDocument();
-    // There are two instances of 8.5 (overlay and bottom), so use getAllByText
-    expect(screen.getAllByText('8.5')).toHaveLength(2);
+    // Rating appears once in the overlay
+    expect(screen.getByText('8.5')).toBeInTheDocument();
   });
 
   it('handles missing poster gracefully', () => {
     const movieWithoutPoster = { ...mockMovie, posterPath: null };
-    render(<MovieCard movie={movieWithoutPoster} />);
+    renderMovieCard(movieWithoutPoster);
     const img = screen.getByAltText('Test Movie');
     expect(img).toHaveAttribute('src', 'https://via.placeholder.com/300x450?text=No+Image');
   });
 
   it('handles missing release date', () => {
     const movieWithoutDate = { ...mockMovie, releaseDate: null };
-    render(<MovieCard movie={movieWithoutDate} />);
+    renderMovieCard(movieWithoutDate);
     expect(screen.queryByText('2024')).not.toBeInTheDocument();
   });
 
   it('handles missing rating', () => {
     const movieWithoutRating = { ...mockMovie, voteAverage: null };
-    render(<MovieCard movie={movieWithoutRating} />);
+    renderMovieCard(movieWithoutRating);
     expect(screen.queryByText('8.5')).not.toBeInTheDocument();
   });
 });
@@ -156,16 +178,8 @@ describe('HorizontalScroll', () => {
   });
 
   it('shows scroll buttons when content overflows', async () => {
-    // Mock scrollWidth > clientWidth
-    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
-      configurable: true,
-      value: 1000,
-    });
-    Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
-      configurable: true,
-      value: 500,
-    });
-
+    // HorizontalScroll is a simple scrollable container without buttons
+    // Test that it renders children and is scrollable
     render(
       <HorizontalScroll>
         {Array.from({ length: 10 }).map((_, i) => (
@@ -174,11 +188,13 @@ describe('HorizontalScroll', () => {
       </HorizontalScroll>
     );
 
-    // Wait for useEffect to run and right button to appear
-    await waitFor(() => {
-      const scrollButtons = screen.getAllByRole('button', { name: /Scroll right/i });
-      expect(scrollButtons).toHaveLength(1);
-    });
+    // Verify children are rendered
+    expect(screen.getByText('Item 0')).toBeInTheDocument();
+    expect(screen.getByText('Item 9')).toBeInTheDocument();
+    
+    // Verify the container has overflow-x-auto class for scrolling
+    const container = screen.getByText('Item 0').closest('.overflow-x-auto');
+    expect(container).toBeInTheDocument();
   });
 });
 

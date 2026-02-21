@@ -8,10 +8,18 @@
 
 html, body, #root {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 /* Mobile optimizations */
@@ -24,6 +32,12 @@ body {
   /* Better scrolling on mobile */
   .scroll-smooth {
     -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+    position: relative;
   }
 }
 

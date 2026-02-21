@@ -10,6 +10,10 @@ import MovieCategoryPage from './pages/MovieCategoryPage';
 import BookmarksPage from './pages/BookmarksPage';
 import ListsPage from './pages/ListsPage';
 import RecommendationsPage from './pages/RecommendationsPage';
+import ProfilePage from './pages/ProfilePage';
+// TODO: Uncomment when SettingsPage is ready to be used
+// import SettingsPage from './pages/SettingsPage';
+import AccountPage from './pages/AccountPage';
 
 export const router = createBrowserRouter([
   {
@@ -25,12 +29,15 @@ export const router = createBrowserRouter([
       { path: 'bookmarks', element: <BookmarksPage /> },
       { path: 'lists/:listName', element: <ListsPage /> },
       { path: 'recommendations', element: <RecommendationsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
+      // TODO: Uncomment when SettingsPage is ready to be used
+      // { path: 'settings', element: <SettingsPage /> },
+      { path: 'account', element: <AccountPage /> },
       {
         path: 'protected',
         element: <ProtectedRoute />,
         children: [
           // Future protected routes will go here
-          // { path: 'profile', element: <ProfilePage /> }
         ]
       }
     ]

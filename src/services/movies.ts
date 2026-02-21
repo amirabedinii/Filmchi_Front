@@ -221,6 +221,7 @@ export type MovieDetails = Movie & {
     cast: CastMember[];
     crew: CrewMember[];
   };
+  userRating?: number | null;
 };
 
 export type CastMember = {
@@ -273,7 +274,8 @@ export async function fetchMovieDetails(tmdbId: string, lang?: string) {
     tagline: data.tagline,
     spokenLanguages: data.spoken_languages ?? data.spokenLanguages,
     productionCountries: data.production_countries ?? data.productionCountries,
-    credits: data.credits
+    credits: data.credits,
+    userRating: data.user_rating ?? data.userRating ?? null
   } as MovieDetails;
 }
 

@@ -1,7 +1,9 @@
 {
   "app": {
-    "title": "فیلِمچی",
+    "title": "فیلمچی",
     "search_placeholder": "جست‌وجوی فیلم...",
+    "menu": "منو",
+    "close_menu": "بستن منو",
     "language": "زبان",
     "theme": "تم",
     "light": "روشن",
@@ -12,7 +14,8 @@
     "register": "ثبت‌نام",
     "home": "خانه",
     "lists": "لیست‌ها",
-    "recommendations": "پیشنهادهای هوش مصنوعی"
+    "recommendations": "پیشنهادهای هوش مصنوعی",
+    "profile": "پروفایل"
   }
   ,
   "auth": {
@@ -78,6 +81,7 @@
     "results_count_plural": "{{count}} نتیجه یافت شد"
   },
   "movie": {
+    "back": "بازگشت",
     "overview": "خلاصه",
     "cast": "بازیگران",
     "crew": "عوامل",
@@ -105,7 +109,16 @@
     "unbookmarked": "فیلم از نشانه‌ها حذف شد",
     "rated": "امتیاز با موفقیت ثبت شد",
     "bookmark_error": "خطا در نشانه‌گذاری فیلم",
-    "rating_error": "خطا در ثبت امتیاز"
+    "rating_error": "خطا در ثبت امتیاز",
+    "login_to_rate": "لطفاً برای امتیازدهی وارد شوید",
+    "statuses": {
+      "Released": "منتشر شده",
+      "Post Production": "پس از تولید",
+      "In Production": "در حال تولید",
+      "Planned": "برنامه‌ریزی شده",
+      "Rumored": "شایعه",
+      "Canceled": "لغو شده"
+    }
   },
   "category": {
     "back": "بازگشت",
@@ -199,6 +212,102 @@
     "example_3": "کمدی‌های عاشقانه دهه ۹۰",
     "example_4": "تریلرهای روان‌شناختی با پیچش داستانی",
     "login_required": "لطفاً برای دریافت پیشنهادات هوش مصنوعی وارد شوید"
+  },
+  "profile": {
+    "title": "پروفایل من",
+    "description": "مشاهده و ویرایش اطلاعات پروفایل شما",
+    "back": "بازگشت",
+    "edit_profile": "ویرایش پروفایل",
+    "save_changes": "ذخیره تغییرات",
+    "cancel": "انصراف",
+    "loading": "در حال بارگذاری پروفایل...",
+    "saving": "در حال ذخیره...",
+    "error_loading": "خطا در بارگذاری پروفایل",
+    "error_saving": "خطا در ذخیره پروفایل",
+    "save_success": "پروفایل با موفقیت به‌روزرسانی شد",
+    "display_name": "نام نمایشی",
+    "display_name_placeholder": "نام نمایشی خود را وارد کنید",
+    "bio": "بیوگرافی",
+    "bio_placeholder": "درباره خودتان بگویید",
+    "location": "موقعیت مکانی",
+    "location_placeholder": "موقعیت شما",
+    "avatar_url": "آدرس آواتار",
+    "avatar_url_placeholder": "https://example.com/avatar.jpg",
+    "favorite_genres": "ژانرهای مورد علاقه",
+    "favorite_genres_placeholder": "اکشن، علمی-تخیلی، درام",
+    "favorite_directors": "کارگردان‌های مورد علاقه",
+    "favorite_directors_placeholder": "کریستوفر نولان، استیون اسپیلبرگ",
+    "favorite_actors": "بازیگران مورد علاقه",
+    "favorite_actors_placeholder": "لئوناردو دی‌کاپریو، مریل استریپ",
+    "email": "ایمیل",
+    "member_since": "عضو از",
+    "user_stats": "آمارها"
+  },
+  "settings": {
+    "title": "تنظیمات",
+    "description": "مدیریت ترجیحات و تنظیمات شما",
+    "back": "بازگشت",
+    "save_changes": "ذخیره تغییرات",
+    "cancel": "انصراف",
+    "loading": "در حال بارگذاری تنظیمات...",
+    "saving": "در حال ذخیره...",
+    "error_loading": "خطا در بارگذاری تنظیمات",
+    "error_saving": "خطا در ذخیره تنظیمات",
+    "save_success": "تنظیمات با موفقیت به‌روزرسانی شد",
+    "theme_section": "ظاهر",
+    "theme_label": "تم",
+    "theme_light": "روشن",
+    "theme_dark": "تاریک",
+    "language_section": "زبان",
+    "language_label": "زبان",
+    "language_en": "English (انگلیسی)",
+    "language_fa": "فارسی",
+    "notifications_section": "اعلان‌ها",
+    "email_notifications": "اعلان‌های ایمیل",
+    "push_notifications": "اعلان‌های فوری",
+    "preferences_section": "ترجیحات",
+    "autoplay": "پخش خودکار ویدیوها",
+    "adult_content": "نمایش محتوای بزرگسالان"
+  },
+  "account": {
+    "title": "تنظیمات حساب کاربری",
+    "description": "مدیریت حساب، حریم خصوصی و داده‌های شما",
+    "back": "بازگشت",
+    "privacy_section": "تنظیمات حریم خصوصی",
+    "profile_visible": "پروفایل برای دیگران قابل مشاهده باشد",
+    "activity_visible": "فعالیت‌ها برای دیگران قابل مشاهده باشد",
+    "lists_visible": "لیست‌ها برای دیگران قابل مشاهده باشد",
+    "save_privacy": "ذخیره تنظیمات حریم خصوصی",
+    "privacy_saved": "تنظیمات حریم خصوصی با موفقیت به‌روزرسانی شد",
+    "privacy_error": "خطا در به‌روزرسانی تنظیمات حریم خصوصی",
+    "data_section": "داده‌های شما",
+    "export_data": "دریافت نسخه از داده‌های من",
+    "export_description": "دانلود تمام داده‌های شما شامل پروفایل، نشان‌ها، لیست تماشا و امتیازها",
+    "exporting": "در حال دریافت نسخه...",
+    "export_success": "داده‌ها با موفقیت دریافت شد",
+    "export_error": "خطا در دریافت نسخه از داده‌ها",
+    "danger_zone": "منطقه خطرناک",
+    "delete_account": "حذف حساب کاربری",
+    "delete_warning": "این عمل قابل بازگشت نیست. تمام داده‌های شما به طور دائمی حذف خواهند شد.",
+    "delete_confirm": "آیا مطمئن هستید که می‌خواهید حساب کاربری خود را حذف کنید؟",
+    "delete_confirm_button": "بله، حساب من را حذف کن",
+    "delete_cancel_button": "انصراف",
+    "deleting": "در حال حذف حساب کاربری...",
+    "delete_success": "حساب کاربری با موفقیت حذف شد",
+    "delete_error": "خطا در حذف حساب کاربری",
+    "loading": "در حال بارگذاری...",
+    "saving": "در حال ذخیره..."
+  },
+  "stats": {
+    "total_watched": "فیلم‌های تماشا شده",
+    "total_rated": "فیلم‌های امتیازدهی شده",
+    "total_bookmarks": "نشان‌ها",
+    "total_watchlist": "موارد لیست تماشا",
+    "average_rating": "میانگین امتیاز",
+    "favorite_genre": "ژانر مورد علاقه",
+    "total_watch_time": "زمان کل تماشا",
+    "hours": "ساعت",
+    "minutes": "دقیقه"
   }
 }
 

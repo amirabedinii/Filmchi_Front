@@ -95,14 +95,17 @@ export default function MovieCategoryPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-4">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('category.back')}
-        </button>
+        {/* Back Button — RTL: button on right, arrow on right of text pointing right */}
+        <div className={language === 'fa' ? 'flex justify-start' : ''}>
+          <button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
+            aria-label={t('category.back')}
+          >
+            <ArrowLeft className={`w-4 h-4 shrink-0 ${language === 'fa' ? 'rotate-180' : ''}`} />
+            {t('category.back')}
+          </button>
+        </div>
         
         {/* Title Section */}
         <div>
