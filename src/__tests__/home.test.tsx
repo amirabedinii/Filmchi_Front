@@ -14,6 +14,8 @@ import '@/i18n';
 vi.mock('lucide-react', () => ({
   Search: () => <div>Search</div>,
   Star: () => <div>Star</div>,
+  Menu: () => <div>Menu</div>,
+  X: () => <div>X</div>,
 }));
 
 // Mock useUiStore

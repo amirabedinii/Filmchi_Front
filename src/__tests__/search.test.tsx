@@ -37,6 +37,7 @@ vi.mock('lucide-react', () => ({
   Search: () => <div>Search</div>,
   Filter: () => <div>Filter</div>,
   X: () => <div>X</div>,
+  Menu: () => <div>Menu</div>,
   ChevronDown: () => <div>ChevronDown</div>,
   Star: () => <div>Star</div>,
 }));
