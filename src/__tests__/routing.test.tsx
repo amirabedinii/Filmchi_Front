@@ -34,7 +34,7 @@ vi.mock('@/stores/useUiStore', () => ({
   },
 }));
 
-// Mock lucide-react
+// Mock lucide-react (include Menu, X for AppLayout)
 vi.mock('lucide-react', () => ({
   Star: () => <div>Star</div>,
   Bookmark: () => <div>Bookmark</div>,
@@ -44,6 +44,8 @@ vi.mock('lucide-react', () => ({
   DollarSign: () => <div>DollarSign</div>,
   ArrowLeft: () => <div>ArrowLeft</div>,
   Search: () => <div>Search</div>,
+  Menu: () => <div>Menu</div>,
+  X: () => <div>X</div>,
 }));
 
 // Mock react-hot-toast
