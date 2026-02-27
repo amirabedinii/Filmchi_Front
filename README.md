@@ -101,6 +101,8 @@ All docs are available in **two versions**: English (`.md`) and Persian / فار
 |-----|---------|--------|
 | Design patterns | [docs/Design-Patterns.md](docs/Design-Patterns.md) | [docs/Design-Patterns.fa.md](docs/Design-Patterns.fa.md) |
 | Testing | [docs/Testing.md](docs/Testing.md) | [docs/Testing.fa.md](docs/Testing.fa.md) |
+| Backend integration | [docs/Backend-Integration.md](docs/Backend-Integration.md) | [docs/Backend-Integration.fa.md](docs/Backend-Integration.fa.md) |
+| Localization (i18n) | [docs/Localization.md](docs/Localization.md) | [docs/Localization.fa.md](docs/Localization.fa.md) |
 
 ## Troubleshooting
 
@@ -108,6 +110,3 @@ All docs are available in **two versions**: English (`.md`) and Persian / فار
 - **401 on requests:** Log in again; if refresh fails, clear localStorage (`filmchi_access_token`, `filmchi_refresh_token`) and log in.
 - **Tests fail:** Run `yarn test` in a clean install; ensure `vitest.setup.ts` and `src/__tests__/` are present. If you added new mocks, ensure stores are reset in `beforeEach` where needed.
 
-## License
-
-MIT

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit2, Save, X, User } from 'lucide-react';
+import { ArrowLeft, Edit2, Save, X } from 'lucide-react';
 import { getUserProfile, updateUserProfile, getUserStats, UserProfile, UserStats } from '@/services/users';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
@@ -155,36 +155,6 @@ export default function ProfilePage() {
             <CardTitle>{t('profile.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Avatar */}
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center overflow-hidden">
-                {(isEditing ? editedProfile.avatarUrl : profile.avatarUrl) ? (
-                  <img 
-                    src={(isEditing ? editedProfile.avatarUrl : profile.avatarUrl) || ''} 
-                    alt="Avatar" 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = '<svg class="w-10 h-10 text-zinc-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-                    }}
-                  />
-                ) : (
-                  <User className="w-10 h-10 text-zinc-400" />
-                )}
-              </div>
-              <div className="flex-1">
-                <Label htmlFor="avatarUrl">{t('profile.avatar_url')}</Label>
-                <Input
-                  id="avatarUrl"
-                  value={(isEditing ? editedProfile.avatarUrl : profile.avatarUrl) || ''}
-                  onChange={(e) => setEditedProfile({ ...editedProfile, avatarUrl: e.target.value })}
-                  placeholder={t('profile.avatar_url_placeholder')}
-                  disabled={!isEditing}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-
             {/* Email (read-only) */}
             <div>
               <Label htmlFor="email">{t('profile.email')}</Label>

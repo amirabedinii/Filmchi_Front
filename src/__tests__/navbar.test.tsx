@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import AppLayout from '@/shared/AppLayout';
 import HomePage from '@/pages/HomePage';
@@ -20,9 +20,13 @@ describe('Navbar', () => {
     );
 
     expect(screen.getByRole('link', { name: /Filmchi|فیل.?مچی/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /home|خانه/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /login|ورود/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /register|ثبت‌نام/i })).toBeInTheDocument();
+    // Hamburger menu (mobile): open it and ensure nav links exist (may also exist in desktop nav)
+    const menuButton = screen.getByRole('button', { name: /menu|منو/i });
+    expect(menuButton).toBeInTheDocument();
+    fireEvent.click(menuButton);
+    expect(screen.getAllByRole('link', { name: /home|خانه/i }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByRole('link', { name: /login|ورود/i }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByRole('link', { name: /register|ثبت‌نام/i }).length).toBeGreaterThanOrEqual(1);
   });
 });
 

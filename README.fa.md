@@ -103,6 +103,8 @@ yarn test:ui
 |:----|:--------|:------|
 | دیزاین پترن‌ها | [docs/Design-Patterns.md](docs/Design-Patterns.md) | [docs/Design-Patterns.fa.md](docs/Design-Patterns.fa.md) |
 | تست | [docs/Testing.md](docs/Testing.md) | [docs/Testing.fa.md](docs/Testing.fa.md) |
+| یکپارچه‌سازی بک‌اند | [docs/Backend-Integration.md](docs/Backend-Integration.md) | [docs/Backend-Integration.fa.md](docs/Backend-Integration.fa.md) |
+| محلی‌سازی (i18n) | [docs/Localization.md](docs/Localization.md) | [docs/Localization.fa.md](docs/Localization.fa.md) |
 
 ## عیب‌یابی
 

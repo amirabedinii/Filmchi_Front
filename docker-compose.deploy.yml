@@ -1,0 +1,15 @@
+# Filmchi frontend – standalone deploy to VPS.
+# Deploys frontend container on shared network for backend's nginx to proxy.
+# Run: docker compose -f docker-compose.deploy.yml up -d
+
+services:
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    container_name: frontend
+    restart: unless-stopped
+    networks:
+      - filmchi
+
+networks:
+  filmchi:
+    external: true

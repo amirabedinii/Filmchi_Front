@@ -15,7 +15,7 @@
 اپلیکیشن با **React 18**، **Vite**، **React Router v6**، **Zustand** و **TanStack Query** ساخته شده. پترن‌های زیر در پروژه به کار رفته‌اند:
 
 | پترن | هدف | محل اصلی استفاده |
-|:-----|:----|:------------------|
+|-----:|----:|------------------:|
 | **لایه سرویس** | انتزاع فراخوانی API و منطق داده | `src/services/*.ts` |
 | **کلاینت API متمرکز** | یک نمونه axios، احراز هویت و retry | `src/services/api.ts` |
 | **استیت سراسری (استور)** | وضعیت احراز هویت و UI | `useAuthStore.ts`, `useUiStore.ts` |
@@ -130,7 +130,7 @@
 ## جدول خلاصه (با ارجاع فایل)
 
 | پترن | فایل‌های کلیدی |
-|:-----|:----------------|
+|-----:|----------------:|
 | لایه سرویس | `src/services/auth.ts`, `movies.ts`, `lists.ts`, `recommendations.ts`, `users.ts`, `health.ts` |
 | کلاینت API متمرکز | `src/services/api.ts` |
 | استیت سراسری (استورها) | `src/stores/useAuthStore.ts`, `src/stores/useUiStore.ts` |

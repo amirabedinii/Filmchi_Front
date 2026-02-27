@@ -2,6 +2,8 @@
   "app": {
     "title": "Filmchi",
     "search_placeholder": "Search movies...",
+    "menu": "Menu",
+    "close_menu": "Close menu",
     "language": "Language",
     "theme": "Theme",
     "light": "Light",

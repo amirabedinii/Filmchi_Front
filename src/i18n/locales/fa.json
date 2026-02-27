@@ -2,6 +2,8 @@
   "app": {
     "title": "فیلمچی",
     "search_placeholder": "جست‌وجوی فیلم...",
+    "menu": "منو",
+    "close_menu": "بستن منو",
     "language": "زبان",
     "theme": "تم",
     "light": "روشن",
